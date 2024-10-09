@@ -1,0 +1,864 @@
+{% extends "template.html" %} {% block body %}
+<h1
+  class="text-center mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white"
+>
+  Bill App
+</h1>
+<p
+  class="mb-6 text-center text-lg font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400"
+>
+  Effortlessly Generate and Manage Bills with Just a Few Taps
+</p>
+
+<section class="flex justify-center min-w-7xl">
+  <div class="max-w-5xl w-full">
+    <div class="flex items-center justify-between">
+      <h1 class="font-extrabold">Bills</h1>
+      <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
+        <ul
+          class="flex flex-wrap -mb-px text-sm font-medium text-center"
+          id="default-tab"
+          data-tabs-toggle="#default-tab-content"
+          role="tablist"
+        >
+          <li class="me-2" role="presentation">
+            <button
+              class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+              id="dashboard-tab"
+              data-tabs-target="#dashboard"
+              type="button"
+              role="tab"
+              aria-controls="dashboard"
+              aria-selected="false"
+            >
+              All bills
+            </button>
+          </li>
+          <li class="me-2" role="presentation">
+            <button
+              class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+              id="bill-tab"
+              data-tabs-target="#add-bill"
+              type="button"
+              role="tab"
+              aria-controls="add-bill"
+              aria-selected="false"
+            >
+              Add bills
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div id="default-tab-content">
+      <div
+        class="hidden p-4 rounded-lg w-full"
+        id="dashboard"
+        role="tabpanel"
+        aria-labelledby="dashboard-tab"
+      >
+        <div class="relative w-full overflow-x-auto shadow-md sm:rounded-lg">
+          <div class="flex justify-between my-3 px-2 items-center">
+            <h1>EXPORT</h1>
+            <div class="flex gap-3">
+              <button
+                type="button"
+                onclick="exportData()"
+                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+              >
+                Export
+              </button>
+            </div>
+          </div>
+          {% if data.__len__() !=0 %}
+          <table
+            class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+          >
+            <thead
+              class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+            >
+              <tr>
+                {% for _key in key %}
+                <th scope="col" class="px-6 py-3">{{_key}}</th>
+                {% endfor %}
+                <th scope="col" class="px-6 py-3">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for _data in data %}
+              <tr
+                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+              >
+                {% for key in key %} {% if key == "id" %}
+                <th
+                  scope="row"
+                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                >
+                  {{_data[key]}}
+                </th>
+                {% else %}
+                <td class="px-6 py-4">{{_data[key]}}</td>
+                {% endif %} {% endfor %}
+                <td class="px-6 py-4 flex">
+                  <button
+                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                    onclick="show('{{_data['id_x']}}');"
+                  >
+                    Print
+                  </button>
+                  <button
+                    class="text-white bg-red-500 hover:bg-red-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                    onclick="show2('{{_data['id_x']}}');"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <h1 class="font-bold text-center p-4">No data found!!</h1>
+          {% endif %}
+        </div>
+      </div>
+      <div
+        class="hidden p-4 rounded-lg w-full"
+        id="add-bill"
+        role="tabpanel"
+        aria-labelledby="add-bill-tab"
+      >
+        <div
+          class="max-w-5lx w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6"
+        >
+          <div class="container mx-auto p-6">
+            <h1 class="text-2xl font-bold mb-4">Add Bill</h1>
+            <form
+              id="billForm"
+              onsubmit="submitBill(event)"
+              class="bg-white p-4 rounded-lg shadow-md"
+            >
+              <div class="mb-4">
+                <label
+                  for="large-input"
+                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >Invoice No</label
+                >
+                <input
+                  type="number"
+                  id="invoiceNo"
+                  placeholder="Invoice No"
+                  class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  required
+                />
+              </div>
+
+              <div class="mb-4">
+                <label
+                  for="large-input"
+                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >Supplier Name</label
+                >
+                <input
+                  type="text"
+                  id="supplierName"
+                  placeholder="Supplier Name"
+                  class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  required
+                />
+              </div>
+              <div class="mb-4">
+                <label
+                  for="large-input"
+                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >Supplier Other Info</label
+                >
+                <input
+                  type="text"
+                  id="supplierOtherInfo"
+                  placeholder="Supplier Other Info"
+                  class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  required
+                />
+              </div>
+
+              <div id="itemsContainer">
+                <div class="item mb-4 p-4 border rounded-lg shadow-lg">
+                  <h1>Items</h1>
+                  <div class="flex space-4 flex-col">
+                    <div class="my-4">
+                      <label
+                        for="large-input"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                        >Goods description</label
+                      >
+                      <input
+                        type="text"
+                        name="goods"
+                        placeholder="Goods"
+                        class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        required
+                      />
+                    </div>
+
+                    <div class="my-4">
+                      <label
+                        for="large-input"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                        >HSN/SAC</label
+                      >
+                      <input
+                        type="text"
+                        name="hsn_sac"
+                        placeholder="HSN/SAC"
+                        class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        required
+                      />
+                    </div>
+                    <div class="my-4">
+                      <label
+                        for="large-input"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                        >Quantity</label
+                      >
+                      <input
+                        type="number"
+                        name="quantity"
+                        placeholder="Quantity"
+                        class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        required
+                        min="1"
+                      />
+                    </div>
+
+                    <div class="my-4">
+                      <label
+                        for="large-input"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                        >Rate</label
+                      >
+                      <input
+                        type="number"
+                        name="rate"
+                        placeholder="Rate"
+                        class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        required
+                        min="0"
+                      />
+                    </div>
+                    <div class="my-4">
+                      <label
+                        for="large-input"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                        >Par</label
+                      >
+                      <input
+                        type="text"
+                        name="par"
+                        placeholder="PAR"
+                        class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        required
+                      />
+                    </div>
+
+                    <div class="my-4">
+                      <label
+                        for="large-input"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                        >Villager Name</label
+                      >
+                      <input
+                        type="text"
+                        name="villagerName"
+                        placeholder="Villager Name"
+                        class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        required
+                      />
+                    </div>
+                    <div class="my-4">
+                      <label
+                        for="large-input"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                        >Vehicle No</label
+                      >
+                      <input
+                        type="text"
+                        name="vehicle_no"
+                        placeholder="Vehicle No"
+                        class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        required
+                      />
+                    </div>
+                    <div class="my-4">
+                      <label
+                        for="large-input"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                        >Good Type</label
+                      >
+                      <input
+                        type="text"
+                        name="goodType"
+                        placeholder="Good Type"
+                        class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        required
+                      />
+                    </div>
+
+                    <div class="my-4">
+                      <label
+                        for="large-input"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                        >Before Weight</label
+                      >
+                      <input
+                        type="number"
+                        name="before_wight"
+                        placeholder="Before Weight"
+                        class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        required
+                      />
+                    </div>
+                    <div class="my-4">
+                      <label
+                        for="large-input"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                        >After Weight</label
+                      >
+                      <input
+                        type="number"
+                        name="after_wight"
+                        placeholder="After Weight"
+                        class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        required
+                      />
+                    </div>
+
+                    <div class="my-4">
+                      <button
+                        type="button"
+                        onclick="removeItem(this)"
+                        class="p-2 bg-red-500 text-white rounded hover:bg-red-600"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button
+                type="button"
+                onclick="addItem()"
+                class="mt-4 p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              >
+                Add Item
+              </button>
+              <button
+                type="submit"
+                class="mt-4 p-2 bg-green-500 text-white rounded hover:bg-green-600"
+              >
+                Submit Bill
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<div
+  id="static-modal"
+  data-modal-backdrop="static"
+  tabindex="-1"
+  aria-hidden="true"
+  class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
+>
+  <div class="relative p-4 w-full max-w-2xl max-h-full">
+    <!-- Modal content -->
+    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+      <!-- Modal header -->
+      <div
+        class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600"
+      >
+        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+          Print
+        </h3>
+        <button
+          type="button"
+          class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+          data-modal-hide="static-modal"
+        >
+          <svg
+            class="w-3 h-3"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 14 14"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+            />
+          </svg>
+          <span class="sr-only">Close modal</span>
+        </button>
+      </div>
+      <!-- Modal body -->
+      <div class="p-4 md:p-5 space-y-4">
+        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+          Print bills
+        </p>
+      </div>
+      <!-- Modal footer -->
+      <div
+        class="flex items-center gap-3 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600"
+      >
+        <button
+          onclick="print()"
+          type="button"
+          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        >
+          bill
+        </button>
+        <button
+          onclick="pass_print()"
+          type="button"
+          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        >
+          get-pass
+        </button>
+        <button
+          onclick="wight_print()"
+          type="button"
+          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        >
+          Weight
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  id="delete-modal"
+  data-modal-backdrop="delete"
+  tabindex="-1"
+  aria-hidden="true"
+  class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
+>
+  <div class="relative p-4 w-full max-w-2xl max-h-full">
+    <!-- Modal content -->
+    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+      <!-- Modal header -->
+      <div
+        class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600"
+      >
+        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+          Delete
+        </h3>
+        <button
+          type="button"
+          class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+          data-modal-hide="delete-modal"
+        >
+          <svg
+            class="w-3 h-3"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 14 14"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+            />
+          </svg>
+          <span class="sr-only">Close modal</span>
+        </button>
+      </div>
+      <!-- Modal body -->
+      <div class="p-4 md:p-5 space-y-4">
+        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+          You want delete bill??
+        </p>
+      </div>
+      <!-- Modal footer -->
+      <div
+        class="flex items-center gap-3 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600"
+      >
+        <button
+          onclick="deleteBill()"
+          type="button"
+          class="text-white bg-red-500 hover:bg-red-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+        >
+          Yes
+        </button>
+        <button
+          onclick="nO()"
+          type="button"
+          class="text-white bg-blue-500 hover:bg-blue-500 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+        >
+          No
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock body %} {% block js %}
+
+<script>
+  const $targetEl = document.getElementById("static-modal");
+  const $targetEl2 = document.getElementById("delete-modal");
+
+  // instance options object
+  const instanceOptions = {
+    id: "static-modal",
+    override: true,
+  };
+
+  const instanceOptions2 = {
+    id: "delete-modal",
+    override: true,
+  };
+  const modal = new Modal($targetEl, {}, instanceOptions);
+  const modal2 = new Modal($targetEl2, {}, instanceOptions2);
+
+  let _id = null;
+  let delete_id = null;
+  function show(id) {
+    _id = id;
+    modal.show();
+  }
+  function show2(id) {
+    delete_id = id;
+    modal2.show();
+  }
+  function print() {
+    window.open(
+      `/bill_print/{{filename}}/${_id}`,
+      "google",
+      "height=720,width=1080"
+    );
+  }
+  function pass_print() {
+    window.open(
+      `/get_pass_print/{{filename}}/${_id}`,
+      "google",
+      "height=720,width=1080"
+    );
+  }
+  function wight_print() {
+    window.open(
+      `/get_wight_print/{{filename}}/${_id}`,
+      "google",
+      "height=720,width=1080"
+    );
+  }
+
+  async function deleteBill(params) {
+    const response = await fetch(`/delete/{{filename}}/${delete_id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const result = await response.json();
+    alert(result.message);
+    modal2.hide();
+    window.location.reload();
+  }
+  function nO(params) {
+    modal2.hide();
+  }
+</script>
+<script>
+  function addItem() {
+    const itemsContainer = document.getElementById("itemsContainer");
+
+    const newItem = document.createElement("div");
+    newItem.className = "item mb-4 p-4 border rounded-lg shadow-lg";
+
+    newItem.innerHTML = `
+      <div class="flex space-y-4 flex-col">
+        <!-- Goods Description -->
+        <div class="my-4">
+          <label
+            for="goods"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >
+            Goods Description
+          </label>
+          <input
+            type="text"
+            name="goods"
+            placeholder="Goods"
+            class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            required
+          />
+        </div>
+
+        <!-- HSN/SAC -->
+        <div class="my-4">
+          <label
+            for="hsn_sac"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >
+            HSN/SAC
+          </label>
+          <input
+            type="text"
+            name="hsn_sac"
+            placeholder="HSN/SAC"
+            class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            required
+          />
+        </div>
+
+        <!-- Quantity -->
+        <div class="my-4">
+          <label
+            for="quantity"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >
+            Quantity
+          </label>
+          <input
+            type="number"
+            name="quantity"
+            placeholder="Quantity"
+            class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            required
+            min="1"
+          />
+        </div>
+
+        <!-- Rate -->
+        <div class="my-4">
+          <label
+            for="rate"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >
+            Rate
+          </label>
+          <input
+            type="number"
+            name="rate"
+            placeholder="Rate"
+            class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            required
+            min="0"
+            step="0.01"
+          />
+        </div>
+
+        <!-- PAR -->
+        <div class="my-4">
+          <label
+            for="par"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >
+            PAR
+          </label>
+          <input
+            type="text"
+            name="par"
+            placeholder="PAR"
+            class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            required
+          />
+        </div>
+
+
+
+        <!-- Villager Name -->
+        <div class="my-4">
+          <label
+            for="villagerName"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >
+            Villager Name
+          </label>
+          <input
+            type="text"
+            name="villagerName"
+            placeholder="Villager Name"
+            class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            required
+          />
+        </div>
+
+        <!-- Vehicle No -->
+        <div class="my-4">
+          <label
+            for="vehicle_no"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >
+            Vehicle No
+          </label>
+          <input
+            type="text"
+            name="vehicle_no"
+            placeholder="Vehicle No"
+            class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            required
+          />
+        </div>
+
+        <!-- Good Type -->
+        <div class="my-4">
+          <label
+            for="goodType"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >
+            Good Type
+          </label>
+          <input
+            type="text"
+            name="goodType"
+            placeholder="Good Type"
+            class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            required
+          />
+        </div>
+
+        <!-- Before Weight -->
+        <div class="my-4">
+          <label
+            for="before_wight"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >
+            Before Weight
+          </label>
+          <input
+            type="number"
+            name="before_wight"
+            placeholder="Before Weight"
+            class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            required
+          />
+        </div>
+
+        <!-- After Weight -->
+        <div class="my-4">
+          <label
+            for="after_wight"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >
+            After Weight
+          </label>
+          <input
+            type="number"
+            name="after_wight"
+            placeholder="After Weight"
+            class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            required
+          />
+        </div>
+
+
+
+        <!-- Remove Item Button -->
+        <div class="my-4">
+          <button
+            type="button"
+            onclick="removeItem(this)"
+            class="p-2 bg-red-500 text-white rounded hover:bg-red-600"
+          >
+            Remove
+          </button>
+        </div>
+      </div>
+    </div>
+    `;
+
+    itemsContainer.appendChild(newItem);
+  }
+
+  function removeItem(button) {
+    const itemDiv = button.closest(".item");
+    if (itemDiv) {
+      itemDiv.remove();
+    }
+  }
+
+  async function submitBill(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const items = [];
+    for (let i = 0; i < formData.getAll("goods").length; i++) {
+      const item = {
+        goods: formData.getAll("goods")[i],
+        hsn_sac: formData.getAll("hsn_sac")[i],
+        quantity: Number(formData.getAll("quantity")[i]),
+        rate: Number(formData.getAll("rate")[i]),
+        par: formData.getAll("par")[i],
+        // amount: formData.getAll("amount")[i],
+        villager_name: formData.getAll("villagerName")[i],
+        vehicle_no: formData.getAll("vehicle_no")[i],
+        good_type: formData.getAll("goodType")[i],
+        before_wight: formData.getAll("before_wight")[i],
+        after_wight: formData.getAll("after_wight")[i],
+        // net_wight: formData.getAll("net_wight")[i],
+      };
+      items.push(item);
+    }
+
+    const billData = {
+      invoiceNo: Number(document.getElementById("invoiceNo").value),
+      //   taxableValue: document.getElementById("taxableValue").value,
+      //   total: document.getElementById("total").value,
+      //   total_quantity: document.getElementById("total_quantity").value,
+      supplierName: document.getElementById("supplierName").value,
+      supplierOtherInfo: document.getElementById("supplierOtherInfo").value,
+      items: items,
+    };
+
+    const response = await fetch("/submit-bill/{{filename}}", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(billData),
+    });
+
+    const result = await response.json();
+    alert(result.message); // Display the success message
+    console.log(result.bill); // Log the submitted bill
+    window.location.reload();
+  }
+</script>
+<script>
+  async function exportData() {
+    try {
+      const response = await fetch(`/export/{{filename}}`, {
+        method: "POST",
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.style.display = "none";
+      a.href = url;
+      a.download = `export_{{filename}}`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      alert("Download started!");
+    } catch (error) {
+      console.error(
+        "There has been a problem with your fetch operation:",
+        error
+      );
+      alert("Error exporting data. Please try again.");
+    }
+  }
+</script>
+{% endblock js %}

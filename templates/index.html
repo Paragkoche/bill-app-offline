@@ -1,0 +1,245 @@
+{% extends "template.html" %} {% block body %}
+<h1
+  class="text-center mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white"
+>
+  Bill App
+</h1>
+<p
+  class="mb-6 text-center text-lg font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400"
+>
+  Effortlessly Generate and Manage Bills with Just a Few Taps
+</p>
+
+<section class="flex justify-center min-w-7xl">
+  <div class="max-w-5xl w-full">
+    <div class="flex items-center justify-between">
+      <h1 class="font-extrabold">Bills</h1>
+      <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
+        <ul
+          class="flex flex-wrap -mb-px text-sm font-medium text-center"
+          id="default-tab"
+          data-tabs-toggle="#default-tab-content"
+          role="tablist"
+        >
+          <li class="me-2" role="presentation">
+            <button
+              class="inline-block p-4 border-b-2 rounded-t-lg"
+              id="profile-tab"
+              data-tabs-target="#profile"
+              type="button"
+              role="tab"
+              aria-controls="profile"
+              aria-selected="false"
+            >
+              Statices
+            </button>
+          </li>
+          <li class="me-2" role="presentation">
+            <button
+              class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+              id="dashboard-tab"
+              data-tabs-target="#dashboard"
+              type="button"
+              role="tab"
+              aria-controls="dashboard"
+              aria-selected="false"
+            >
+              All bills
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div id="default-tab-content">
+      <div
+        class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800"
+        id="profile"
+        role="tabpanel"
+        aria-labelledby="profile-tab"
+      >
+        <div
+          class="max-w-5lx w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6"
+        >
+          <div class="flex justify-between">
+            <div>
+              <h5
+                class="leading-none text-3xl font-bold text-gray-900 dark:text-white pb-2"
+              >
+                {{data.__len__()}}
+              </h5>
+              <p class="text-base font-normal text-gray-500 dark:text-gray-400">
+                total Bills
+              </p>
+            </div>
+          </div>
+          <div id="area-chart"></div>
+        </div>
+      </div>
+      <div
+        class="hidden p-4 rounded-lg w-full"
+        id="dashboard"
+        role="tabpanel"
+        aria-labelledby="dashboard-tab"
+      >
+        <div class="relative w-full overflow-x-auto shadow-md sm:rounded-lg">
+          <div class="flex justify-between my-3 px-2 items-center">
+            <h1>Import File</h1>
+            <form
+              action="/upload"
+              method="post"
+              class="flex items-center space-x-4"
+              enctype="multipart/form-data"
+            >
+              <input
+                class="block w-full mb-5 text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                id="small_size"
+                type="file"
+                name="file"
+                required
+                accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+              />
+              <button
+                type="submit"
+                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+              >
+                Import
+              </button>
+            </form>
+          </div>
+          <table
+            class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+          >
+            <thead
+              class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+            >
+              <tr>
+                {% for _key in key %}
+                <th scope="col" class="px-6 py-3">{{_key}}</th>
+                {% endfor %}
+                <th scope="col" class="px-6 py-3">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for _data in data %}
+              <tr
+                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+              >
+                {% for key in key %} {% if key == "id" %}
+                <th
+                  scope="row"
+                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                >
+                  {{_data[key]}}
+                </th>
+                {% else %}
+                <td class="px-6 py-4">{{_data[key]}}</td>
+                {% endif %} {% endfor %}
+                <td class="px-6 py-4 flex">
+                  <button
+                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                    onclick="goTo('{{_data['filename']}}');"
+                  >
+                    Show bills
+                  </button>
+                  <!-- <button
+                    class="text-white bg-red-500 hover:bg-red-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                  >
+                    Delete
+                  </button> -->
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock body %} {% block js %}
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script>
+    const options = {
+        chart: {
+          height: "100%",
+          maxWidth: "100%",
+          type: "area",
+          fontFamily: "Inter, sans-serif",
+          dropShadow: {
+            enabled: false,
+          },
+          toolbar: {
+            show: false,
+          },
+        },
+        tooltip: {
+          enabled: true,
+          x: {
+            show: false,
+          },
+        },
+        fill: {
+          type: "gradient",
+          gradient: {
+            opacityFrom: 0.55,
+            opacityTo: 0,
+            shade: "#1C64F2",
+            gradientToColors: ["#1C64F2"],
+          },
+        },
+        dataLabels: {
+          enabled: false,
+        },
+        stroke: {
+          width: 6,
+        },
+        grid: {
+          show: false,
+          strokeDashArray: 4,
+          padding: {
+            left: 2,
+            right: 2,
+            top: 0,
+          },
+        },
+        series: [{
+          name: "Total Bills",
+          data: {{ chart_data|tojson }}  // Pass dynamic data from FastAPI
+        }],
+        xaxis: {
+          categories: {{ chart_labels|tojson }},  // Pass dynamic categories from FastAPI
+          labels: {
+            show: false,
+          },
+          axisBorder: {
+            show: false,
+          },
+          axisTicks: {
+            show: false,
+          },
+        },
+        yaxis: {
+          show: false,
+        },
+      };
+
+
+  if (
+    document.getElementById("area-chart") &&
+    typeof ApexCharts !== "undefined"
+  ) {
+    const chart = new ApexCharts(
+      document.getElementById("area-chart"),
+      options
+    );
+    chart.render();
+  }
+</script>
+<script>
+  function goTo(filename) {
+    window.location.href = `/bills/${filename}`;
+  }
+</script>
+
+{% endblock js %}

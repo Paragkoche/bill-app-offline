@@ -1,0 +1,31 @@
+{% extends "template.html" %} {% block body %}
+<h1
+  class="text-center mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white"
+>
+  Bill App
+</h1>
+<p
+  class="mb-6 text-center text-lg font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400"
+>
+  Effortlessly Generate and Manage Bills with Just a Few Taps
+</p>
+<p
+  style="color: tomato"
+  class="mb-6 text-center text-lg font-normal text-red-500 lg:text-xl sm:px-16 xl:px-48 dark:text-red-500"
+>
+  {{message}}
+</p>
+<section class="flex justify-center min-w-7xl">
+  <div class="max-w-5xl w-full">
+    <div class="flex justify-center items-center">
+      <button
+        onclick="window.location.href ='/'"
+        class="mt-4 p-2 bg-green-500 text-white rounded hover:bg-green-600"
+      >
+        Home
+      </button>
+    </div>
+  </div>
+</section>
+
+{% endblock body %} {% block js %} {% endblock js %}
