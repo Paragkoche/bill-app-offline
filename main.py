@@ -27,30 +27,38 @@ templates.env.filters['enumerate'] = enumerate_filter
 
 @app.get("/")
 async def read_item(request: Request):
-    files = glob("./database/*.xlsx")
+    try:
+        files = glob("./database/*.xlsx")
 
-    chart_data = {
-        "labels": [],
-        "total_values": []
-    }
-    total_bills = 0
-
-    # Assuming you're adding total values from the bills as your data source
-    for file in files:
-        for bill in get_list(file):
-            chart_data["labels"].append(bill['createdAt'])
-            chart_data["total_values"].append(bill['total'])
-            total_bills += 1
-    return templates.TemplateResponse(
-        request=request, name="index.html",
-        context={
-            "data": [{"id": index+1, "filename": i.split("\\")[-1]} for index, i in enumerate(files)],
-            "key": ["id", "filename"],
-            "chart_labels": chart_data["labels"],
-            "chart_data": chart_data["total_values"],
-            "total_bills": total_bills
+        chart_data = {
+            "labels": [],
+            "total_values": []
         }
-    )
+        total_bills = 0
+
+        # Assuming you're adding total values from the bills as your data source
+        for file in files:
+            for bill in get_list(file):
+                chart_data["labels"].append(bill['createdAt'])
+                chart_data["total_values"].append(bill['total'])
+                total_bills += 1
+        return templates.TemplateResponse(
+            request=request, name="index.html",
+            context={
+                "data": [{"id": index+1, "filename": i.split("\\")[-1]} for index, i in enumerate(files)],
+                "key": ["id", "filename"],
+                "chart_labels": chart_data["labels"],
+                "chart_data": chart_data["total_values"],
+                "total_bills": total_bills
+            }
+        )
+    except:
+        return templates.TemplateResponse(
+            request=request, name="error.html",
+            context={
+                "message": "error on file replace or delete file {file}".format(file=file.split("\\")[-1])
+            }
+        )
 
 
 @app.get("/bill_print/{file_name}/{id}")
@@ -284,3 +292,13 @@ async def delete_data(filename: str, id: str):
         return {"message": "bill is delete successfully"}
     except:
         return {"message": "bill not found!!"}
+
+
+@app.on_event("startup")
+async def startup():
+    webbrowser.open("http://localhost:8000")
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0")
