@@ -33,12 +33,15 @@ async def read_item(request: Request):
         "labels": [],
         "total_values": []
     }
+    total_bills = 0
 
     # Assuming you're adding total values from the bills as your data source
     for file in files:
         for bill in get_list(file):
             chart_data["labels"].append(bill['createdAt'])
             chart_data["total_values"].append(bill['total'])
+            total_bills += 1
+    print(total_bills)
     print(chart_data)
     return templates.TemplateResponse(
         request=request, name="index.html",
@@ -46,7 +49,8 @@ async def read_item(request: Request):
             "data": [{"id": index+1, "filename": i.split("\\")[-1]} for index, i in enumerate(files)],
             "key": ["id", "filename"],
             "chart_labels": chart_data["labels"],
-            "chart_data": chart_data["total_values"]
+            "chart_data": chart_data["total_values"],
+            "total_bills": total_bills
         }
     )
 
@@ -178,8 +182,12 @@ async def upload_excel(request: Request, file: UploadFile = File(...)):
         excel_file = pd.ExcelFile(contents)
         # Check if both required sheets exist
         if 'bills' not in excel_file.sheet_names or 'items' not in excel_file.sheet_names:
-            raise HTTPException(
-                status_code=400, detail="Excel file must contain 'bill_data' and 'items' sheets.")
+            raise templates.TemplateResponse(
+                request=request, name="error.html",
+                context={
+                    "message": "Excel file must contain 'bill_data' and 'items' sheets."
+                }
+            )
 
         # Read the sheets into DataFrames
         df_bill_data = excel_file.parse('bills')
@@ -222,22 +230,35 @@ async def upload_excel(request: Request, file: UploadFile = File(...)):
 
 @app.get("/bills/{filename}", response_class=HTMLResponse)
 async def bills(request: Request, filename: str,):
-    data = get_list(os.path.join("./database", filename))
-    print(data)
-    return templates.TemplateResponse(
-        request=request, name="bill_data.html",
-        context={
-            "data": [
-                {**i,
+    if not os.path.exists(os.path.join("./database", filename)):
+        raise templates.TemplateResponse(
+            request=request, name="error.html",
+            context={
+                "message": f"{filename} not found!!", }
+        )
+    try:
+        data = get_list(os.path.join("./database", filename))
+        return templates.TemplateResponse(
+            request=request, name="bill_data.html",
+            context={
+                "data": [
+                    {**i,
 
-                 "items": i['items'].__len__()
-                 }
-                for i in data],
-            "key":  data[-1].keys() if data.__len__() != 0 else [],
-            "filename": filename
+                     "items": i['items'].__len__()
+                     }
+                    for i in data],
+                "key":  data[-1].keys() if data.__len__() != 0 else [],
+                "filename": filename
 
-        }
-    )
+            }
+        )
+    except Exception as e:
+        return templates.TemplateResponse(
+            request=request, name="error.html",
+            context={
+                "message": str(e)
+            }
+        )
 
 
 @app.post("/export/{filename}")

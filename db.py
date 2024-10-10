@@ -60,7 +60,7 @@ def create_bill(file_name: str, data: Bill):
     total = 0
     for i in data.items:
         item_new_id = df_items['id'].max() + 1 if not df_items.empty else 1
-        total += i.rate * i.quantity
+        total = total + (i.rate * i.quantity)
         total_quantity += i.quantity
         item_new_item = {
             "id": item_new_id,

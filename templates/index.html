@@ -65,7 +65,7 @@
               <h5
                 class="leading-none text-3xl font-bold text-gray-900 dark:text-white pb-2"
               >
-                {{data.__len__()}}
+                Files: {{data.__len__()}} bills: {{total_bills}}
               </h5>
               <p class="text-base font-normal text-gray-500 dark:text-gray-400">
                 total Bills
@@ -91,7 +91,7 @@
               enctype="multipart/form-data"
             >
               <input
-                class="block w-full mb-5 text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                class="block w-full text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                 id="small_size"
                 type="file"
                 name="file"
