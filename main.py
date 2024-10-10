@@ -28,7 +28,7 @@ templates.env.filters['enumerate'] = enumerate_filter
 @app.get("/")
 async def read_item(request: Request):
     try:
-        files = glob("./database/*.csv")
+        files = glob("./database/*.xlsx")
 
         chart_data = {
             "labels": [],
@@ -39,7 +39,7 @@ async def read_item(request: Request):
         # Assuming you're adding total values from the bills as your data source
         for file in files:
             for bill in get_list(file):
-                print(bill)
+                # print(bill)
                 chart_data["labels"].append(bill['createdAt'])
                 chart_data["total_values"].append(bill['total'])
                 total_bills += 1
@@ -54,7 +54,7 @@ async def read_item(request: Request):
             }
         )
     except Exception as e:
-        print(e)
+        # print(e)
         return templates.TemplateResponse(
             request=request, name="error.html",
             context={
@@ -66,7 +66,7 @@ async def read_item(request: Request):
 @app.get("/bill_print/{file_name}/{id}")
 async def bill_print(request: Request, id: str, file_name: str):
     data = read_data(os.path.join("./database", file_name), id)
-
+    print(data)
     return templates.TemplateResponse(
         request=request, name="bill.html",
         context={
@@ -156,9 +156,9 @@ async def get_wight_print(request: Request, id: str, file_name: str):
 
 
 @app.post("/submit-bill/{file_name}")
-async def submit_bill(file_name: str, bill_data: Bill,):
+async def submit_bill(file_name: str, bill_data: Bill):
     try:
-
+        print(bill_data)
         # Create the billData entry with related items
         bill = create_bill(file_name=os.path.join("./database", file_name),
                            data=bill_data
@@ -166,7 +166,7 @@ async def submit_bill(file_name: str, bill_data: Bill,):
 
         return {"message": "Bill submitted successfully", "bill": bill}
     except Exception as e:
-        print(f"Error submitting bill: {e}")
+        # print(f"Error submitting bill: {e}")
         raise HTTPException(status_code=500, detail="Internal Server Error")
 
 
@@ -190,7 +190,7 @@ async def upload_excel(request: Request, file: UploadFile = File(...)):
 
         # Read the sheets into DataFrames
         df_bill_data = excel_file
-        print(set(bill_data_columns), set(df_bill_data.columns))
+        # print(set(bill_data_columns), set(df_bill_data.columns))
 
         # Validate the columns in bill_data
         if set(bill_data_columns) != set(df_bill_data.columns):
@@ -208,7 +208,7 @@ async def upload_excel(request: Request, file: UploadFile = File(...)):
         )
 
     except Exception as e:
-        print(e)
+        # print(e)
         return templates.TemplateResponse(
             request=request, name="error.html",
             context={
@@ -275,7 +275,7 @@ async def delete_data(filename: str, id: str):
 @app.post("/create-template")
 async def create_template(request: Request, filename: str = Form(...)):
     try:
-        check_excel(os.path.join("./database", filename+".csv"))
+        check_excel(os.path.join("./database", filename+".xlsx"))
         return templates.TemplateResponse(
             request=request, name="upload.html",
 

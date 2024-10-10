@@ -65,7 +65,7 @@
         role="tabpanel"
         aria-labelledby="dashboard-tab"
       >
-        <div class="relative w-full overflow-x-auto shadow-md sm:rounded-lg">
+        <div class="relative shadow-md sm:rounded-lg">
           <div class="flex justify-between my-3 px-2 items-center">
             <h1>EXPORT</h1>
             <div class="flex gap-3">
@@ -80,7 +80,7 @@
           </div>
           {% if data.__len__() !=0 %}
           <table
-            class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+            class="text-sm overflow-hidden text-left rtl:text-right text-gray-500 dark:text-gray-400"
           >
             <thead
               class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
@@ -89,7 +89,7 @@
                 {% for _key in key %}
                 <th scope="col" class="px-6 py-3">{{_key}}</th>
                 {% endfor %}
-                <th scope="col" class="px-6 py-3">Action</th>
+                <th scope="col" class="px-6 py-3 sticky">Action</th>
               </tr>
             </thead>
             <tbody>
@@ -107,7 +107,7 @@
                 {% else %}
                 <td class="px-6 py-4">{{_data[key]}}</td>
                 {% endif %} {% endfor %}
-                <td class="px-6 py-4 flex">
+                <td class="px-6 py-4 flex sticky">
                   <button
                     class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
                     onclick="show('{{_data['id']}}');"
@@ -811,7 +811,7 @@
     }
 
     const billData = {
-      invoiceNo: Number(document.getElementById("invoiceNo").value),
+      invoiceNo: Number(document.getElementById("invoiceNo").value).toString(),
       //   taxableValue: document.getElementById("taxableValue").value,
       //   total: document.getElementById("total").value,
       //   total_quantity: document.getElementById("total_quantity").value,

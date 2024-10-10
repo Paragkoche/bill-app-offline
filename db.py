@@ -1,55 +1,119 @@
-
 import pandas as pd
 import os
 from datetime import datetime
 from pydantic import BaseModel
+from openpyxl import Workbook, load_workbook
 from typing import Optional
+
+# Set Pandas display options
+pd.set_option('display.max_columns', 1000, 'display.width',
+              1000, 'display.max_rows', 1000)
+
+# Define the Bill model using Pydantic with all fields as strings
 
 
 class Bill(BaseModel):
-    invoiceNo: int
+    invoiceNo: str
     supplierName: str
     supplierOtherInfo: str
     goods: str
     hsn_sac: str
-    quantity: int
+    quantity: float
     rate: float
     par: str
     villager_name: str
     vehicle_no: str
     good_type: str
-    before_wight: float
-    after_wight: float
+    before_wight: str
+    after_wight: str
+
+# Function to check if the Excel file exists and create it if it does not
 
 
 def check_excel(file_name: str):
     if not os.path.exists(file_name):
         bill_data_columns = [
             "id",
-            "invoiceNo", "taxableValue", "total",
-            "total_quantity", "supplierName", "supplierOtherInfo", "createdAt",
-            "goods", "hsn_sac", "quantity", "rate", "par",
-            "amount", "villagerName", "vehicle_no", "goodType",
-            "before_wight", "after_wight", "net_wight",
+            "invoiceNo",
+            "supplierName",
+            "supplierOtherInfo",
+            "goods",
+            "hsn_sac",
+            "quantity",
+            "rate",
+            "par",
+            "villagerName",
+            "vehicle_no",
+            "goodType",
+            "before_wight",
+            "after_wight",
+            "net_wight",
+            "amount",
+            "total",
+            "total_quantity",
+            "taxableValue",
+            "createdAt",
         ]
 
+        # Create an empty DataFrame with the specified columns
         df_bill_data = pd.DataFrame(columns=bill_data_columns)
-        df_bill_data.to_csv(file_name, mode='w', index=False)
+
+        # Save the DataFrame to an Excel file
+        df_bill_data.to_excel(file_name, index=False, sheet_name='Sheet1')
+
+        # Set column widths using openpyxl
+        workbook = load_workbook(file_name)
+        worksheet = workbook.active
+        column_widths = {
+            'A': 10,  # id
+            'B': 20,  # invoiceNo
+            'C': 30,  # supplierName
+            'D': 30,  # supplierOtherInfo
+            'E': 15,  # goods
+            'F': 15,  # hsn_sac
+            'G': 10,  # quantity
+            'H': 10,  # rate
+            'I': 10,  # par
+            'J': 20,  # villagerName
+            'K': 15,  # vehicle_no
+            'L': 15,  # goodType
+            'M': 15,  # before_wight
+            'N': 15,  # after_wight
+            'O': 15,  # net_wight
+            'P': 15,  # amount
+            'Q': 15,  # total
+            'R': 15,  # total_quantity
+            'S': 15,  # taxableValue
+            'T': 20,  # createdAt
+        }
+
+        # Set column widths
+        for col, width in column_widths.items():
+            worksheet.column_dimensions[col].width = width
+
+        # Save the workbook
+        workbook.save(file_name)
+
         return (True, df_bill_data)
-    return (True, pd.read_csv(
-        file_name,
-    ))
+
+    # If the file exists, read and return the data
+    df_bill_data = pd.read_excel(file_name)
+    return (True, df_bill_data)
+
+# Function to create a new bill entry
 
 
 def create_bill(file_name: str, data: Bill):
     it_valid_excel, df_bill_data = check_excel(file_name)
-    if it_valid_excel == False:
+    if not it_valid_excel:
         return False
-    new_id = df_bill_data['id'].max()+1 if not df_bill_data.empty else 1
-    total_quantity = data.quantity
-    total = data.quantity * data.rate
+
+    new_id = df_bill_data['id'].max() + 1 if not df_bill_data.empty else 1
+    total_quantity = str(data.quantity)
+    total = str(float(data.quantity) * float(data.rate))
+
     new_bill = {
-        "id": new_id,
+        "id": str(new_id),
         "invoiceNo": data.invoiceNo,
         "taxableValue": total,
         "total": total,
@@ -68,42 +132,42 @@ def create_bill(file_name: str, data: Bill):
         "goodType": data.good_type,
         "before_wight": data.before_wight,
         "after_wight": data.after_wight,
-        "net_wight": data.after_wight - data.before_wight
-
+        "net_wight": str(float(data.after_wight) - float(data.before_wight))
     }
+
+    # Append the new bill to the DataFrame
     df_bill_data = pd.concat(
-        [df_bill_data, pd.DataFrame([new_bill])],
-        ignore_index=True
-    )
-    df_bill_data.to_csv(file_name, index=False)
+        [df_bill_data, pd.DataFrame([new_bill])], ignore_index=True)
+    df_bill_data.to_excel(file_name, index=False, sheet_name='Sheet1')
 
     return True
+
+# Function to get a list of bills
 
 
 def get_list(file_name: str):
     it_valid_excel, df_bill_data = check_excel(file_name)
+    return df_bill_data.to_dict(orient="records")
 
-    # Create a dictionary of bills with nested items
-    bills = df_bill_data
-    print(bills)
-    # print(bills_with_items)
-    return bills.to_dict(orient="records",)
+# Function to read a specific bill by ID
 
 
-def read_data(file_name: str, id: str):
-    it_valid_excel, df_bill_data,  = check_excel(file_name)
-    bill = df_bill_data[df_bill_data['id'] == int(id)]
-    bill_data = bill.to_dict(orient='records')[0]
+def read_data(file_name: str, bill_id: str):
+    it_valid_excel, df_bill_data = check_excel(file_name)
+    bill = df_bill_data[df_bill_data['id'] == int(bill_id)]
+    bill_data = bill.to_dict(orient='records')[0] if not bill.empty else None
     return bill_data
 
+# Function to delete a bill by ID
 
-def delete_bill(file_name, bill_id):
+
+def delete_bill(file_name: str, bill_id: str):
     it_valid_excel, df_bill_data = check_excel(file_name)
-    if int(bill_id) not in df_bill_data['id'].values:
-        print(f"No billData found with id {bill_id}.")
+    if bill_id not in df_bill_data['id'].values:
         return False
-    print(df_bill_data)
-    df_bill_data = df_bill_data[df_bill_data['id'] != int(bill_id)].reset_index(
-        drop=True)
 
-    df_bill_data.to_csv(file_name, index=False)
+    df_bill_data = df_bill_data[df_bill_data['id']
+                                != bill_id].reset_index(drop=True)
+    df_bill_data.to_excel(file_name, index=False, sheet_name='Sheet1')
+
+    return True
