@@ -41,8 +41,6 @@ async def read_item(request: Request):
             chart_data["labels"].append(bill['createdAt'])
             chart_data["total_values"].append(bill['total'])
             total_bills += 1
-    print(total_bills)
-    print(chart_data)
     return templates.TemplateResponse(
         request=request, name="index.html",
         context={
