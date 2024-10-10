@@ -288,9 +288,10 @@ async def create_template(request: Request, filename: str = Form(...)):
             }
         )
 
-# @app.on_event("startup")
-# async def startup():
-#     webbrowser.open("http://localhost:8000")
+
+@app.on_event("startup")
+async def startup():
+    webbrowser.open("http://localhost:8000")
 
 
 if __name__ == "__main__":
