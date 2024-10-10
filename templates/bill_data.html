@@ -79,52 +79,64 @@
             </div>
           </div>
           {% if data.__len__() !=0 %}
-          <table
-            class="text-sm overflow-hidden text-left rtl:text-right text-gray-500 dark:text-gray-400"
-          >
-            <thead
-              class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+          <div class="overflow-x-auto">
+            <table
+              class="text-sm table-auto min-w-full text-left rtl:text-right text-gray-500 dark:text-gray-400"
             >
-              <tr>
-                {% for _key in key %}
-                <th scope="col" class="px-6 py-3">{{_key}}</th>
-                {% endfor %}
-                <th scope="col" class="px-6 py-3 sticky">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for _data in data %}
-              <tr
-                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+              <thead
+                class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
               >
-                {% for key in key %} {% if key == "id" %}
-                <th
-                  scope="row"
-                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                <tr>
+                  {% for _key in key %}
+                  <th scope="col" class="px-6 py-3">{{_key}}</th>
+                  {% endfor %}
+                  <th
+                    scope="col"
+                    class="px-6 py-3 sticky right-0 bg-gray-50 dark:bg-gray-700 z-10"
+                  >
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for _data in data %}
+                <tr
+                  class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                 >
-                  {{_data[key]}}
-                </th>
-                {% else %}
-                <td class="px-6 py-4">{{_data[key]}}</td>
-                {% endif %} {% endfor %}
-                <td class="px-6 py-4 flex sticky">
-                  <button
-                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-                    onclick="show('{{_data['id']}}');"
+                  {% for key in key %} {% if key == "id" %}
+                  <th
+                    scope="row"
+                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                   >
-                    Print
-                  </button>
-                  <button
-                    class="text-white bg-red-500 hover:bg-red-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-                    onclick="show2('{{_data['id']}}');"
+                    {{_data[key]}}
+                  </th>
+                  {% else %}
+                  <td class="px-6 py-4">{{_data[key]}}</td>
+                  {% endif %} {% endfor %}
+                  <td
+                    class="px-6 py-4 sticky right-0 bg-white dark:bg-gray-800 z-10"
                   >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+                    <div class="flex">
+                      <button
+                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                        onclick="show('{{_data['id']}}');"
+                      >
+                        Print
+                      </button>
+                      <button
+                        class="text-white bg-red-500 hover:bg-red-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                        onclick="show2('{{_data['id']}}');"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
           {% else %}
           <h1 class="font-bold text-center p-4">No data found!!</h1>
           {% endif %}
