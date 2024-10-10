@@ -13,7 +13,15 @@
 <section class="flex justify-center min-w-7xl">
   <div class="max-w-5xl w-full">
     <div class="flex items-center justify-between">
-      <h1 class="font-extrabold">Bills</h1>
+      <div class="flex space-x-3 items-center">
+        <h1 class="font-extrabold">Bills</h1>
+        <button
+          onclick="window.location.href = '/'"
+          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+        >
+          Home
+        </button>
+      </div>
       <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
         <ul
           class="flex flex-wrap -mb-px text-sm font-medium text-center"
@@ -102,13 +110,13 @@
                 <td class="px-6 py-4 flex">
                   <button
                     class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-                    onclick="show('{{_data['id_x']}}');"
+                    onclick="show('{{_data['id']}}');"
                   >
                     Print
                   </button>
                   <button
                     class="text-white bg-red-500 hover:bg-red-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-                    onclick="show2('{{_data['id_x']}}');"
+                    onclick="show2('{{_data['id']}}');"
                   >
                     Delete
                   </button>
@@ -345,13 +353,7 @@
                   </div>
                 </div>
               </div>
-              <button
-                type="button"
-                onclick="addItem()"
-                class="mt-4 p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-              >
-                Add Item
-              </button>
+
               <button
                 type="submit"
                 class="mt-4 p-2 bg-green-500 text-white rounded hover:bg-green-600"
@@ -530,6 +532,7 @@
   let _id = null;
   let delete_id = null;
   function show(id) {
+    console.log(id);
     _id = id;
     modal.show();
   }
@@ -814,7 +817,7 @@
       //   total_quantity: document.getElementById("total_quantity").value,
       supplierName: document.getElementById("supplierName").value,
       supplierOtherInfo: document.getElementById("supplierOtherInfo").value,
-      items: items,
+      ...items[0],
     };
 
     const response = await fetch("/submit-bill/{{filename}}", {

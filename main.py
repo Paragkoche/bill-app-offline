@@ -1,13 +1,13 @@
 import io
-from math import log
 import os
-from fastapi import FastAPI, File, HTTPException, Query, Request, UploadFile
+from typing import Annotated
+from fastapi import FastAPI, File, Form, HTTPException, Query, Request, UploadFile
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 import num2words
 import pandas as pd
-from db import Bill, create_bill, delete_bill, get_list, read_data
+from db import Bill, check_excel, create_bill, delete_bill, get_list, read_data
 from glob import glob
 import webbrowser
 
@@ -28,7 +28,7 @@ templates.env.filters['enumerate'] = enumerate_filter
 @app.get("/")
 async def read_item(request: Request):
     try:
-        files = glob("./database/*.xlsx")
+        files = glob("./database/*.csv")
 
         chart_data = {
             "labels": [],
@@ -39,6 +39,7 @@ async def read_item(request: Request):
         # Assuming you're adding total values from the bills as your data source
         for file in files:
             for bill in get_list(file):
+                print(bill)
                 chart_data["labels"].append(bill['createdAt'])
                 chart_data["total_values"].append(bill['total'])
                 total_bills += 1
@@ -52,7 +53,8 @@ async def read_item(request: Request):
                 "total_bills": total_bills
             }
         )
-    except:
+    except Exception as e:
+        print(e)
         return templates.TemplateResponse(
             request=request, name="error.html",
             context={
@@ -73,27 +75,27 @@ async def bill_print(request: Request, id: str, file_name: str):
             "supplierName": data['supplierName'],
             "supplierOtherInfo": data['supplierOtherInfo'],
             "items": [{
-                "good": i['goods'],
-                "hsn_sac": i['hsn_sac'],
-                "quantity": i['quantity'],
-                "rate": i['rate'],
-                "par": i['par'],
-                "amount": i['amount'],
-                "vehicle_no": i['vehicle_no'],
+                "good": data['goods'],
+                "hsn_sac": data['hsn_sac'],
+                "quantity": data['quantity'],
+                "rate": data['rate'],
+                "par": data['par'],
+                "amount": data['amount'],
+                "vehicle_no": data['vehicle_no'],
                 "invoiceNo": data['invoiceNo'],
                 "total": data['total'],
                 "amount_in_word": num2words.num2words(data['total'])
 
-            } for i in data['items']],
+            }],
             "total_quantity": data['total_quantity'],
             "total_amount": data['total'],
             "bill_items": [{
-                "hsn_sac": i['hsn_sac'],
-                "total": i['amount']
-            } for i in data['items']],
+                "hsn_sac": data['hsn_sac'],
+                "total": data['amount']
+            }],
             "tex_amount": data['taxableValue'],
             "amount_in_word": num2words.num2words(data['total'], lang="en_IN"),
-            "par": data['items'][0]['par']
+            "par": data['par']
 
         }
     )
@@ -109,16 +111,16 @@ async def get_pass_print(request: Request, id: str, file_name: str):
 
             "items": [{
                 "date": data["createdAt"],
-                "good": i['goods'],
+                "good": data['goods'],
 
 
-                "villagerName": i['villagerName'],
+                "villagerName": data['villagerName'],
 
 
-                "vehicle_no": i['vehicle_no'],
+                "vehicle_no": data['vehicle_no'],
 
 
-            } for i in data['items']],
+            }],
 
 
         }
@@ -130,7 +132,7 @@ async def get_wight_print(request: Request, id: str, file_name: str):
     data = read_data(os.path.join("./database", file_name), id)
     v: list[str] = []
     s = []
-    for i in data['items']:
+    for i in [data]:
         if i['vehicle_no'] not in v:
             v.append(i['vehicle_no'])
             s.append(
@@ -173,59 +175,40 @@ async def upload_excel(request: Request, file: UploadFile = File(...)):
 
     bill_data_columns = [
         "id", "invoiceNo", "taxableValue", "total",
-        "total_quantity", "supplierName", "supplierOtherInfo", "createdAt"
-    ]
-    items_columns = [
-        "id", "goods", "hsn_sac", "quantity", "rate", "par",
+        "total_quantity", "supplierName", "supplierOtherInfo", "createdAt",
+        "goods", "hsn_sac", "quantity", "rate", "par",
         "amount", "villagerName", "vehicle_no", "goodType",
-        "before_wight", "after_wight", "net_wight", "billDataId"
+        "before_wight", "after_wight", "net_wight"
     ]
     try:
       # Read the uploaded Excel file into DataFrames
         contents = await file.read()
         file_name = file.filename
         # Use `pd.ExcelFile` to read the Excel file with multiple sheets
-        excel_file = pd.ExcelFile(contents)
+        excel_file = pd.read_csv(io.BytesIO(contents))
         # Check if both required sheets exist
-        if 'bills' not in excel_file.sheet_names or 'items' not in excel_file.sheet_names:
-            raise templates.TemplateResponse(
-                request=request, name="error.html",
-                context={
-                    "message": "Excel file must contain 'bill_data' and 'items' sheets."
-                }
-            )
 
         # Read the sheets into DataFrames
-        df_bill_data = excel_file.parse('bills')
-        df_items = excel_file.parse('items')
+        df_bill_data = excel_file
+        print(set(bill_data_columns), set(df_bill_data.columns))
 
         # Validate the columns in bill_data
         if set(bill_data_columns) != set(df_bill_data.columns):
-            raise templates.TemplateResponse(
+            return templates.TemplateResponse(
                 request=request, name="error.html",
                 context={
                     "message": "bill_data sheet is missing required columns or has extra columns."
                 }
             )
+        df_bill_data.to_csv(os.path.join("./database", file_name), index=False)
 
-        # Validate the columns in items
-        if set(items_columns) != set(df_items.columns):
-            raise templates.TemplateResponse(
-                request=request, name="error.html",
-                context={
-                    "message": "items sheet is missing required columns or has extra columns."
-                }
-            )
-
-        with open(os.path.join("./database", file_name), "ab") as fs:
-            fs.write(contents)
-            fs.close()
         return templates.TemplateResponse(
             request=request, name="upload.html",
 
         )
 
     except Exception as e:
+        print(e)
         return templates.TemplateResponse(
             request=request, name="error.html",
             context={
@@ -247,12 +230,7 @@ async def bills(request: Request, filename: str,):
         return templates.TemplateResponse(
             request=request, name="bill_data.html",
             context={
-                "data": [
-                    {**i,
-
-                     "items": i['items'].__len__()
-                     }
-                    for i in data],
+                "data": data,
                 "key":  data[-1].keys() if data.__len__() != 0 else [],
                 "filename": filename
 
@@ -294,9 +272,25 @@ async def delete_data(filename: str, id: str):
         return {"message": "bill not found!!"}
 
 
-@app.on_event("startup")
-async def startup():
-    webbrowser.open("http://localhost:8000")
+@app.post("/create-template")
+async def create_template(request: Request, filename: str = Form(...)):
+    try:
+        check_excel(os.path.join("./database", filename+".csv"))
+        return templates.TemplateResponse(
+            request=request, name="upload.html",
+
+        )
+    except Exception as e:
+        return templates.TemplateResponse(
+            request=request, name="error.html",
+            context={
+                "message": str(e)
+            }
+        )
+
+# @app.on_event("startup")
+# async def startup():
+#     webbrowser.open("http://localhost:8000")
 
 
 if __name__ == "__main__":

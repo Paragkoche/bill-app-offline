@@ -1,0 +1,3 @@
+id,invoiceNo,taxableValue,total,total_quantity,supplierName,supplierOtherInfo,createdAt,goods,hsn_sac,quantity,rate,par,amount,villagerName,vehicle_no,goodType,before_wight,after_wight,net_wight
+1,23,529.0,529.0,23,nbjb,mdnd,10-Oct-24,kd,kk,23,23.0,kdmf,529.0,jhbjh,hjb,23,222.0,22.0,-200.0
+2,123,543589.0,543589.0,233,knlk,lnln,10-Oct-24,lnln,lnln,233,2333.0,kjkn,543589.0,kjnknk,knjkn,kjnkn,737.0,77.0,-660.0
