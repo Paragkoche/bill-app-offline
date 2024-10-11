@@ -32,7 +32,8 @@ async def read_item(request: Request):
         files = glob("./database/*.xlsx")
         f = []
         for file in files:
-            if not file.startswith("~$"):
+            if not file.split("\\")[-1].startswith("~$"):
+                print(file)
                 f.append(file)
         chart_data = {
             "labels": [],
@@ -53,7 +54,7 @@ async def read_item(request: Request):
         return templates.TemplateResponse(
             request=request, name="index.html",
             context={
-                "data": [{"id": index+1, "filename": i.split("\\")[-1]} for index, i in enumerate(files)],
+                "data": [{"id": index+1, "filename": i.split("\\")[-1]} for index, i in enumerate(f)],
                 "key": ["id", "filename"],
                 "chart_labels": chart_data["labels"],
                 "chart_data": chart_data["total_values"],
