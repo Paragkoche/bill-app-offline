@@ -1,3 +1,4 @@
+import datetime
 import io
 import os
 from typing import Annotated
@@ -40,8 +41,11 @@ async def read_item(request: Request):
         for file in files:
             for bill in get_list(file):
                 # print(bill)
-                chart_data["labels"].append(bill['createdAt'])
-                chart_data["total_values"].append(bill['total'])
+                print(type(bill['createdAt']) is pd.Timestamp)
+                chart_data["labels"].append(bill["createdAt"].strftime(
+                    "%d-%b-%y") if type(bill['createdAt']) is pd.Timestamp else bill["createdAt"])
+                chart_data["total_values"].append(
+                    float(bill['quantity']) * float(bill['rate']))
                 total_bills += 1
         return templates.TemplateResponse(
             request=request, name="index.html",
@@ -54,7 +58,7 @@ async def read_item(request: Request):
             }
         )
     except Exception as e:
-        # print(e)
+        print(e)
         return templates.TemplateResponse(
             request=request, name="error.html",
             context={
@@ -66,35 +70,37 @@ async def read_item(request: Request):
 @app.get("/bill_print/{file_name}/{id}")
 async def bill_print(request: Request, id: str, file_name: str):
     data = read_data(os.path.join("./database", file_name), id)
+    print(type(data['createdAt']) is pd.Timestamp)
     print(data)
     return templates.TemplateResponse(
         request=request, name="bill.html",
         context={
             "invoiceNo": data['invoiceNo'],
-            "date": data['createdAt'],
+            "date":  data["createdAt"].strftime(
+                "%d-%b-%y") if type(data['createdAt']) is pd.Timestamp else data["createdAt"],
             "supplierName": data['supplierName'],
             "supplierOtherInfo": data['supplierOtherInfo'],
             "items": [{
                 "good": data['goods'],
                 "hsn_sac": data['hsn_sac'],
-                "quantity": data['quantity'],
-                "rate": data['rate'],
+                "quantity": float(data['quantity']),
+                "rate": float(data['rate']),
                 "par": data['par'],
-                "amount": data['amount'],
+                "amount": float(data['quantity']) * float(data['rate']),
                 "vehicle_no": data['vehicle_no'],
                 "invoiceNo": data['invoiceNo'],
-                "total": data['total'],
-                "amount_in_word": num2words.num2words(data['total'])
+                "total": float(data['quantity']) * float(data['rate']),
+                "amount_in_word": num2words.num2words(float(data['quantity']) * float(data['rate']))
 
             }],
-            "total_quantity": data['total_quantity'],
-            "total_amount": data['total'],
+            "total_quantity": data['quantity'],
+            "total_amount": float(data['quantity']) * float(data['rate']),
             "bill_items": [{
                 "hsn_sac": data['hsn_sac'],
-                "total": data['amount']
+                "total": float(data['quantity']) * float(data['rate'])
             }],
-            "tex_amount": data['taxableValue'],
-            "amount_in_word": num2words.num2words(data['total'], lang="en_IN"),
+            "tex_amount": float(data['quantity']) * float(data['rate']),
+            "amount_in_word": num2words.num2words(float(data['quantity']) * float(data['rate']), lang="en_IN"),
             "par": data['par']
 
         }
@@ -110,7 +116,8 @@ async def get_pass_print(request: Request, id: str, file_name: str):
         context={
 
             "items": [{
-                "date": data["createdAt"],
+                "date": data["createdAt"].strftime(
+                    "%d-%b-%y") if type(data['createdAt']) is pd.Timestamp else data["createdAt"],
                 "good": data['goods'],
 
 
@@ -137,14 +144,15 @@ async def get_wight_print(request: Request, id: str, file_name: str):
             v.append(i['vehicle_no'])
             s.append(
                 {
-                    "date": data["createdAt"],
+                    "date": data["createdAt"].strftime(
+                        "%d-%b-%y") if type(data['createdAt']) is pd.Timestamp else data["createdAt"],
                     "villagerName": i['villagerName'],
                     "good": i['goods'],
                     "vehicle_no": i['vehicle_no'],
                     "googType": i['goodType'],
                     "before_wight": i['before_wight'],
                     "after_wight": i['after_wight'],
-                    "net_wight": i['net_wight']
+                    "net_wight": i['after_wight'] - i['before_wight']
                 })
     return templates.TemplateResponse(
         request=request, name="wight.html",
@@ -174,11 +182,10 @@ async def submit_bill(file_name: str, bill_data: Bill):
 async def upload_excel(request: Request, file: UploadFile = File(...)):
 
     bill_data_columns = [
-        "id", "invoiceNo", "taxableValue", "total",
-        "total_quantity", "supplierName", "supplierOtherInfo", "createdAt",
+        "id", "invoiceNo",  "supplierName", "supplierOtherInfo", "createdAt",
         "goods", "hsn_sac", "quantity", "rate", "par",
-        "amount", "villagerName", "vehicle_no", "goodType",
-        "before_wight", "after_wight", "net_wight"
+        "villagerName", "vehicle_no", "goodType",
+        "before_wight", "after_wight"
     ]
     try:
       # Read the uploaded Excel file into DataFrames
@@ -237,6 +244,7 @@ async def bills(request: Request, filename: str,):
             }
         )
     except Exception as e:
+        print(e)
         return templates.TemplateResponse(
             request=request, name="error.html",
             context={

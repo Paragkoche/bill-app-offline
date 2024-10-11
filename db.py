@@ -47,11 +47,6 @@ def check_excel(file_name: str):
             "goodType",
             "before_wight",
             "after_wight",
-            "net_wight",
-            "amount",
-            "total",
-            "total_quantity",
-            "taxableValue",
             "createdAt",
         ]
 
@@ -79,11 +74,6 @@ def check_excel(file_name: str):
             'L': 15,  # goodType
             'M': 15,  # before_wight
             'N': 15,  # after_wight
-            'O': 15,  # net_wight
-            'P': 15,  # amount
-            'Q': 15,  # total
-            'R': 15,  # total_quantity
-            'S': 15,  # taxableValue
             'T': 20,  # createdAt
         }
 
@@ -109,15 +99,11 @@ def create_bill(file_name: str, data: Bill):
         return False
 
     new_id = df_bill_data['id'].max() + 1 if not df_bill_data.empty else 1
-    total_quantity = str(data.quantity)
-    total = str(float(data.quantity) * float(data.rate))
 
     new_bill = {
         "id": str(new_id),
         "invoiceNo": data.invoiceNo,
-        "taxableValue": total,
-        "total": total,
-        "total_quantity": total_quantity,
+
         "supplierName": data.supplierName,
         "supplierOtherInfo": data.supplierOtherInfo,
         "createdAt": datetime.now().strftime("%d-%b-%y"),
@@ -126,15 +112,14 @@ def create_bill(file_name: str, data: Bill):
         "quantity": data.quantity,
         "rate": data.rate,
         "par": data.par,
-        "amount": total,
+
         "villagerName": data.villager_name,
         "vehicle_no": data.vehicle_no,
         "goodType": data.good_type,
         "before_wight": data.before_wight,
         "after_wight": data.after_wight,
-        "net_wight": str(float(data.after_wight) - float(data.before_wight))
-    }
 
+    }
     # Append the new bill to the DataFrame
     df_bill_data = pd.concat(
         [df_bill_data, pd.DataFrame([new_bill])], ignore_index=True)
@@ -163,11 +148,12 @@ def read_data(file_name: str, bill_id: str):
 
 def delete_bill(file_name: str, bill_id: str):
     it_valid_excel, df_bill_data = check_excel(file_name)
-    if bill_id not in df_bill_data['id'].values:
+    if int(bill_id) not in df_bill_data['id'].values:
         return False
 
     df_bill_data = df_bill_data[df_bill_data['id']
-                                != bill_id].reset_index(drop=True)
+                                != int(bill_id)].reset_index(drop=True)
+    # print(df_bill_data)
     df_bill_data.to_excel(file_name, index=False, sheet_name='Sheet1')
 
     return True
