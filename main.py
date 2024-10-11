@@ -30,7 +30,10 @@ templates.env.filters['enumerate'] = enumerate_filter
 async def read_item(request: Request):
     try:
         files = glob("./database/*.xlsx")
-
+        f = []
+        for file in files:
+            if not file.startswith("~$"):
+                f.append(file)
         chart_data = {
             "labels": [],
             "total_values": []
@@ -38,7 +41,7 @@ async def read_item(request: Request):
         total_bills = 0
 
         # Assuming you're adding total values from the bills as your data source
-        for file in files:
+        for file in f:
             for bill in get_list(file):
                 # print(bill)
                 print(type(bill['createdAt']) is pd.Timestamp)
