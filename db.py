@@ -74,7 +74,7 @@ def check_excel(file_name: str):
             'L': 15,  # goodType
             'M': 15,  # before_wight
             'N': 15,  # after_wight
-            'T': 20,  # createdAt
+            'O': 20,  # createdAt
         }
 
         # Set column widths
@@ -106,7 +106,7 @@ def create_bill(file_name: str, data: Bill):
 
         "supplierName": data.supplierName,
         "supplierOtherInfo": data.supplierOtherInfo,
-        "createdAt": datetime.now().strftime("%d-%b-%y"),
+        "createdAt": datetime.now(),
         "goods": data.goods,
         "hsn_sac": data.hsn_sac,
         "quantity": data.quantity,
@@ -123,7 +123,24 @@ def create_bill(file_name: str, data: Bill):
     # Append the new bill to the DataFrame
     df_bill_data = pd.concat(
         [df_bill_data, pd.DataFrame([new_bill])], ignore_index=True)
-    df_bill_data.to_excel(file_name, index=False, sheet_name='Sheet1')
+    try:
+        with pd.ExcelWriter(file_name, engine='xlsxwriter') as writer:
+            df_bill_data.to_excel(writer, index=False, sheet_name='Sheet1')
+
+            # Access the XlsxWriter workbook and worksheet objects
+            workbook = writer.book
+            worksheet = writer.sheets['Sheet1']
+
+            # Set the date format for the 'createdAt' column
+            date_format = workbook.add_format(
+                {'num_format': 'dd-mmm-yy'})  # Set format to '15-Oct-24'
+            # Adjust column width and set format (E is the 5th column)
+            worksheet.set_column('O:O', 12, date_format)
+
+    except Exception as e:
+        print(f"Error saving to Excel file: {e}")
+        return False
+    # df_bill_data.to_excel(file_name, index=False, sheet_name='Sheet1')
 
     return True
 
