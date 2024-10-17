@@ -74,8 +74,6 @@ async def read_item(request: Request):
 @app.get("/bill_print/{file_name}/{id}")
 async def bill_print(request: Request, id: str, file_name: str):
     data = read_data(os.path.join("./database", file_name), id)
-    print(type(data['createdAt']) is pd.Timestamp)
-    print(data)
     return templates.TemplateResponse(
         request=request, name="bill.html",
         context={
@@ -111,6 +109,44 @@ async def bill_print(request: Request, id: str, file_name: str):
     )
 
 
+@app.get("/bill_all_print/{file_name}")
+async def bill_print_all(request: Request,  file_name: str):
+    data = get_list(os.path.join("./database", file_name))
+    return templates.TemplateResponse(
+        request=request, name="all_bill.html",
+        context={
+            "data": [{"invoiceNo": i['invoiceNo'],
+                     "date":  i["createdAt"].strftime(
+                "%d-%b-%y") if type(i['createdAt']) is pd.Timestamp else i["createdAt"],
+                "supplierName": i['supplierName'],
+                "supplierOtherInfo": i['supplierOtherInfo'],
+                "items": [{
+                    "good": i['goods'],
+                    "hsn_sac": i['hsn_sac'],
+                    "quantity": float(i['quantity']),
+                    "rate": float(i['rate']),
+                    "par": i['par'],
+                    "amount": float(i['quantity']) * float(i['rate']),
+                    "vehicle_no": i['vehicle_no'],
+                    "invoiceNo": i['invoiceNo'],
+                    "total": float(i['quantity']) * float(i['rate']),
+                    "amount_in_word": num2words.num2words(float(i['quantity']) * float(i['rate']))
+
+                }],
+                "total_quantity": i['quantity'],
+                "total_amount": float(i['quantity']) * float(i['rate']),
+                "bill_items": [{
+                    "hsn_sac": i['hsn_sac'],
+                    "total": float(i['quantity']) * float(i['rate'])
+                }],
+                "tex_amount": float(i['quantity']) * float(i['rate']),
+                "amount_in_word": num2words.num2words(float(i['quantity']) * float(i['rate']), lang="en_IN"),
+                "par": i['par']} for i in data]
+
+        }
+    )
+
+
 @app.get("/get_pass_print/{file_name}/{id}")
 async def get_pass_print(request: Request, id: str, file_name: str):
     data = read_data(os.path.join("./database", file_name), id)
@@ -132,6 +168,33 @@ async def get_pass_print(request: Request, id: str, file_name: str):
 
 
             }],
+
+
+        }
+    )
+
+
+@app.get("/get_all_pass_print/{file_name}")
+async def get_pass_print(request: Request, file_name: str):
+    data = get_list(os.path.join("./database", file_name))
+
+    return templates.TemplateResponse(
+        request=request, name="all_get_pass.html",
+        context={
+
+            "data": [{"items": [{
+                "date": i["createdAt"].strftime(
+                    "%d-%b-%y") if type(i['createdAt']) is pd.Timestamp else i["createdAt"],
+                "good": i['goods'],
+
+
+                "villagerName": i['villagerName'],
+
+
+                "vehicle_no": i['vehicle_no'],
+
+
+            }]} for i in data],
 
 
         }
@@ -162,6 +225,39 @@ async def get_wight_print(request: Request, id: str, file_name: str):
         request=request, name="wight.html",
         context={
             "items": s
+
+        }
+    )
+
+
+@app.get("/get_all_wight_print/{file_name}")
+async def get_wight_print(request: Request, file_name: str):
+    data = get_list(os.path.join("./database", file_name))
+    d = []
+    for j in data:
+        v: list[str] = []
+        s = []
+        for i in [j]:
+
+            if i['vehicle_no'] not in v:
+                v.append(i['vehicle_no'])
+                s.append(
+                    {
+                        "date": j["createdAt"].strftime(
+                            "%d-%b-%y") if type(j['createdAt']) is pd.Timestamp else j["createdAt"],
+                        "villagerName": i['villagerName'],
+                        "good": i['goods'],
+                        "vehicle_no": i['vehicle_no'],
+                        "googType": i['goodType'],
+                        "before_wight": i['before_wight'],
+                        "after_wight": i['after_wight'],
+                        "net_wight": i['after_wight'] - i['before_wight']
+                    })
+            d.append(s)
+    return templates.TemplateResponse(
+        request=request, name="all_wight.html",
+        context={
+            "data": [{"items": s} for s in d]
 
         }
     )
