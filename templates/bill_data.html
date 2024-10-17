@@ -85,6 +85,14 @@
               >
                 Export
               </button>
+              <button
+                type="button"
+                id="pdf"
+                onclick="createPdf()"
+                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+              >
+                create pdf
+              </button>
             </div>
           </div>
           {% if data.__len__() !=0 %}
@@ -963,6 +971,29 @@
       a.click();
       window.URL.revokeObjectURL(url);
       alert("Download started!");
+    } catch (error) {
+      console.error(
+        "There has been a problem with your fetch operation:",
+        error
+      );
+      alert("Error exporting data. Please try again.");
+    }
+  }
+  async function createPdf() {
+    try {
+      pdf.innerText = "Loading..";
+      const response = await fetch(`/create-pdf/{{filename}}`, {
+        method: "POST",
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const result = await response.json();
+      alert(result.message); // Display the success message
+      pdf.innerText = "create pdf";
+      window.location.reload();
     } catch (error) {
       console.error(
         "There has been a problem with your fetch operation:",

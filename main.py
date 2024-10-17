@@ -1,3 +1,10 @@
+from pyppeteer import launch
+import asyncio
+import pdfkit
+import httpx
+from xhtml2pdf import pisa
+import requests
+from pyhtml2pdf import converter
 import datetime
 import io
 import os
@@ -26,7 +33,7 @@ def enumerate_filter(seq):
 templates.env.filters['enumerate'] = enumerate_filter
 
 
-@app.get("/")
+@ app.get("/")
 async def read_item(request: Request):
     try:
         files = glob("./database/*.xlsx")
@@ -175,7 +182,7 @@ async def get_pass_print(request: Request, id: str, file_name: str):
 
 
 @app.get("/get_all_pass_print/{file_name}")
-async def get_pass_print(request: Request, file_name: str):
+async def get_pass_print_all(request: Request, file_name: str):
     data = get_list(os.path.join("./database", file_name))
 
     return templates.TemplateResponse(
@@ -231,7 +238,7 @@ async def get_wight_print(request: Request, id: str, file_name: str):
 
 
 @app.get("/get_all_wight_print/{file_name}")
-async def get_wight_print(request: Request, file_name: str):
+async def get_wight_print_all(request: Request, file_name: str):
     data = get_list(os.path.join("./database", file_name))
     d = []
     for j in data:
@@ -395,6 +402,67 @@ async def create_template(request: Request, filename: str = Form(...)):
                 "message": str(e)
             }
         )
+
+
+async def convert_html_to_pdf(source_html, output_filename):
+    try:
+        # Launch headless browser
+        browser = await launch(headless=True, executablePath="C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe")
+        page = await browser.newPage()  # Open a new page
+        # await page.setContent(source_html)
+        # Set HTML content
+        await page.setContent(source_html)
+        await page.pdf({'path': output_filename, 'format': 'A4', "margins": {
+            'top': '75px',
+            'right': '75px',
+            'bottom': '75px',
+            'left': '75px'
+        },
+            "printBackground": True,
+            "preferCSSPageSize": True
+        },
+
+        )  # Save PDF
+        await browser.close()  # Close browser
+        print(f"PDF successfully generated: {output_filename}")
+    except Exception as e:
+        print(f"Error generating PDF: {e}")
+
+
+@app.post("/create-pdf/{filename}")
+async def create_pdf(filename: str, request: Request):
+    data = get_list(os.path.join("./database", filename))
+    base_url = request.base_url
+
+    # Iterate over each bill and create the necessary directories and PDFs
+    for i in data:
+        invoice_dir = f"./pdf/{i['invoiceNo']}"
+        os.makedirs(invoice_dir, exist_ok=True)
+
+        # Define the URLs for bill, get_pass, and wight
+        bill_url = f'{base_url}bill_print/{filename}/{i["id"]}'
+        get_pass_url = f'{base_url}get_pass_print/{filename}/{i["id"]}'
+        wight_url = f'{base_url}get_wight_print/{filename}/{i["id"]}'
+
+        # Fetch the content asynchronously using httpx
+        async with httpx.AsyncClient() as client:
+            bill_response = await client.get(bill_url)
+            get_pass_response = await client.get(get_pass_url)
+            wight_response = await client.get(wight_url)
+
+        # If the requests are successful, convert the HTML to PDF
+        if bill_response.status_code == 200:
+            bill_content = bill_response.text
+            await convert_html_to_pdf(bill_content, f"{invoice_dir}/bill.pdf")
+
+        if get_pass_response.status_code == 200:
+            get_pass_content = get_pass_response.text
+            await convert_html_to_pdf(get_pass_content, f"{invoice_dir}/get_pass.pdf")
+
+        if wight_response.status_code == 200:
+            wight_content = wight_response.text
+            await convert_html_to_pdf(wight_content, f"{invoice_dir}/wight.pdf")
+    return {"message": "PDFs generated successfully"}
 
 
 @app.on_event("startup")
