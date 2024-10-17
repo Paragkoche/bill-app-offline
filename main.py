@@ -407,7 +407,7 @@ async def create_template(request: Request, filename: str = Form(...)):
 async def convert_html_to_pdf(source_html, output_filename):
     try:
         # Launch headless browser
-        browser = await launch(headless=True, executablePath="C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe")
+        browser = await launch(headless=True, executablePath="C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe")
         page = await browser.newPage()  # Open a new page
         # await page.setContent(source_html)
         # Set HTML content
