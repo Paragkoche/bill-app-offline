@@ -73,7 +73,7 @@ async def read_item(request: Request):
         return templates.TemplateResponse(
             request=request, name="error.html",
             context={
-                "message": "error on file replace or delete file {file}".format(file=file.split("\\")[-1])
+                "message": "error on file replace or delete file {file} or close the file {file}".format(file=file.split("\\")[-1])
             }
         )
 
@@ -355,7 +355,7 @@ async def bills(request: Request, filename: str,):
         return templates.TemplateResponse(
             request=request, name="error.html",
             context={
-                "message": str(e)
+                "message":  "error on file replace or delete file {file} or close the file {file}".format(file=filename.split("\\")[-1])
             }
         )
 
@@ -436,7 +436,7 @@ async def create_pdf(filename: str, request: Request):
 
     # Iterate over each bill and create the necessary directories and PDFs
     for i in data:
-        invoice_dir = f"./pdf/{i['invoiceNo']}_{i['supplierName']}"
+        invoice_dir = f"./pdf/{i['invoiceNo']}"
         os.makedirs(invoice_dir, exist_ok=True)
 
         # Define the URLs for bill, get_pass, and wight
