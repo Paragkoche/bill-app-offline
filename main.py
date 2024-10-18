@@ -436,7 +436,7 @@ async def create_pdf(filename: str, request: Request):
 
     # Iterate over each bill and create the necessary directories and PDFs
     for i in data:
-        invoice_dir = f"./pdf/{i['invoiceNo']}"
+        invoice_dir = f"./pdf/{i['invoiceNo']}_{i['supplierName']}"
         os.makedirs(invoice_dir, exist_ok=True)
 
         # Define the URLs for bill, get_pass, and wight
