@@ -33,7 +33,7 @@ def enumerate_filter(seq):
 templates.env.filters['enumerate'] = enumerate_filter
 
 
-@ app.get("/")
+@app.get("/")
 async def read_item(request: Request):
     try:
         files = glob("./database/*.xlsx")
@@ -90,26 +90,27 @@ async def bill_print(request: Request, id: str, file_name: str):
             "supplierName": data['supplierName'],
             "supplierOtherInfo": data['supplierOtherInfo'],
             "items": [{
+                "farmerCode": data['farmerCode'],
                 "good": data['goods'],
                 "hsn_sac": data['hsn_sac'],
-                "quantity": float(data['quantity']),
-                "rate": float(data['rate']),
+                "quantity": "{:.2f}".format(float(data['quantity'])),
+                "rate": "{:.2f}".format(float(data['rate'])),
                 "par": data['par'],
-                "amount": float(data['quantity']) * float(data['rate']),
+                "amount": "{:.2f}".format(float(data['quantity']) * float(data['rate'])),
                 "vehicle_no": data['vehicle_no'],
                 "invoiceNo": data['invoiceNo'],
-                "total": float(data['quantity']) * float(data['rate']),
-                "amount_in_word": num2words.num2words(float(data['quantity']) * float(data['rate']))
+                "total": "{:.2f}".format(float(data['quantity']) * float(data['rate'])),
+                "amount_in_word": "".join([num2words.num2words(i, lang="en_IN",) if i != "00" else "" for i in "{:.2f}".format(float(data['quantity']) * float(data['rate'])).split(".")])
 
             }],
-            "total_quantity": data['quantity'],
-            "total_amount": float(data['quantity']) * float(data['rate']),
+            "total_quantity": "{:.2f}".format(data['quantity']),
+            "total_amount": "{:.2f}".format(float(data['quantity']) * float(data['rate'])),
             "bill_items": [{
                 "hsn_sac": data['hsn_sac'],
-                "total": float(data['quantity']) * float(data['rate'])
+                "total": "{:.2f}".format(float(data['quantity']) * float(data['rate']))
             }],
-            "tex_amount": float(data['quantity']) * float(data['rate']),
-            "amount_in_word": num2words.num2words(float(data['quantity']) * float(data['rate']), lang="en_IN"),
+            "tex_amount": "{:.2f}".format(float(data['quantity']) * float(data['rate'])),
+            "amount_in_word": "".join([num2words.num2words(i, lang="en_IN",) if i != "00" else "" for i in "{:.2f}".format(float(data['quantity']) * float(data['rate'])).split(".")]),
             "par": data['par']
 
         }
@@ -128,26 +129,27 @@ async def bill_print_all(request: Request,  file_name: str):
                 "supplierName": i['supplierName'],
                 "supplierOtherInfo": i['supplierOtherInfo'],
                 "items": [{
+                    "farmerCode": i['farmerCode'],
                     "good": i['goods'],
                     "hsn_sac": i['hsn_sac'],
-                    "quantity": float(i['quantity']),
-                    "rate": float(i['rate']),
+                    "quantity": "{:.2f}".format(float(i['quantity'])),
+                    "rate": "{:.2f}".format(float(i['rate'])),
                     "par": i['par'],
-                    "amount": float(i['quantity']) * float(i['rate']),
+                    "amount": "{:.2f}".format(float(i['quantity']) * float(i['rate'])),
                     "vehicle_no": i['vehicle_no'],
                     "invoiceNo": i['invoiceNo'],
-                    "total": float(i['quantity']) * float(i['rate']),
-                    "amount_in_word": num2words.num2words(float(i['quantity']) * float(i['rate']))
+                    "total": "{:.2f}".format(float(i['quantity']) * float(i['rate'])),
+                    "amount_in_word": " ".join([str(num2words.num2words(k, lang="en_IN",)) if k != "00" else "" for k in "{:.2f}".format(float(i['quantity']) * float(i['rate'])).split(".")])
 
                 }],
-                "total_quantity": i['quantity'],
-                "total_amount": float(i['quantity']) * float(i['rate']),
+                "total_quantity": "{:.2f}".format(i['quantity']),
+                "total_amount": "{:.2f}".format(float(i['quantity']) * float(i['rate'])),
                 "bill_items": [{
                     "hsn_sac": i['hsn_sac'],
-                    "total": float(i['quantity']) * float(i['rate'])
+                    "total": "{:.2f}".format(float(i['quantity']) * float(i['rate']))
                 }],
-                "tex_amount": float(i['quantity']) * float(i['rate']),
-                "amount_in_word": num2words.num2words(float(i['quantity']) * float(i['rate']), lang="en_IN"),
+                "tex_amount": "{:.2f}".format(float(i['quantity']) * float(i['rate'])),
+                "amount_in_word": " ".join([str(num2words.num2words(k, lang="en_IN",))if k != "00" else "" for k in "{:.2f}".format(float(i['quantity']) * float(i['rate'])).split(".")]),
                 "par": i['par']} for i in data]
 
         }
@@ -168,7 +170,7 @@ async def get_pass_print(request: Request, id: str, file_name: str):
                 "good": data['goods'],
 
 
-                "villagerName": data['villagerName'],
+                "villagerName": data['farmerName'],
 
 
                 "vehicle_no": data['vehicle_no'],
@@ -195,7 +197,7 @@ async def get_pass_print_all(request: Request, file_name: str):
                 "good": i['goods'],
 
 
-                "villagerName": i['villagerName'],
+                "villagerName": i['framerName'],
 
 
                 "vehicle_no": i['vehicle_no'],
@@ -220,10 +222,12 @@ async def get_wight_print(request: Request, id: str, file_name: str):
                 {
                     "date": data["createdAt"].strftime(
                         "%d-%b-%y") if type(data['createdAt']) is pd.Timestamp else data["createdAt"],
-                    "villagerName": i['villagerName'],
+
+                    "villagerName": i['farmerName'],
+                    "farmerCode": i['farmerCode'],
                     "good": i['goods'],
                     "vehicle_no": i['vehicle_no'],
-                    "googType": i['goodType'],
+                    "par": i['par'],
                     "before_wight": i['before_wight'],
                     "after_wight": i['after_wight'],
                     "net_wight": i['after_wight'] - i['before_wight']
@@ -231,8 +235,8 @@ async def get_wight_print(request: Request, id: str, file_name: str):
     return templates.TemplateResponse(
         request=request, name="wight.html",
         context={
-            "items": s
-
+            "items": s,
+            "academic": f"{data['createdAt'].year-1}-{data['createdAt'].year}",
         }
     )
 
@@ -252,19 +256,21 @@ async def get_wight_print_all(request: Request, file_name: str):
                     {
                         "date": j["createdAt"].strftime(
                             "%d-%b-%y") if type(j['createdAt']) is pd.Timestamp else j["createdAt"],
-                        "villagerName": i['villagerName'],
+                        "villagerName": i['farmerName'],
+                        "farmerCode": i['farmerCode'],
                         "good": i['goods'],
+                        "par": i['par'],
                         "vehicle_no": i['vehicle_no'],
-                        "googType": i['goodType'],
                         "before_wight": i['before_wight'],
                         "after_wight": i['after_wight'],
                         "net_wight": i['after_wight'] - i['before_wight']
                     })
-            d.append(s)
+            d.append(
+                {"items": s, "academic": f"{j['createdAt'].year-1}-{j['createdAt'].year}"})
     return templates.TemplateResponse(
         request=request, name="all_wight.html",
         context={
-            "data": [{"items": s} for s in d]
+            "data": [{**s} for s in d]
 
         }
     )
@@ -291,7 +297,7 @@ async def upload_excel(request: Request, file: UploadFile = File(...)):
     bill_data_columns = [
         "id", "invoiceNo",  "supplierName", "supplierOtherInfo", "createdAt",
         "goods", "hsn_sac", "quantity", "rate", "par",
-        "villagerName", "vehicle_no", "goodType",
+        "farmerName", "vehicle_no", "farmerCode",
         "before_wight", "after_wight"
     ]
     try:

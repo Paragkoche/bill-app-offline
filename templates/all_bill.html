@@ -2927,7 +2927,7 @@
               <td class="column12 style100 null"></td>
             </tr>
             <tr class="row5">
-              <td class="column0 style31 s">Sr No.</td>
+              <td class="column0 style31 s">Sl No.</td>
               <td class="column1 style32 s style34" colspan="4">
                 Description of Goods
               </td>
@@ -2938,7 +2938,7 @@
               <td class="column9 style32 s style34" colspan="3">Amount</td>
             </tr>
             {% for index,item in info["items"] | enumerate %} {% if
-            items.__len__()-1 ==index %}
+            info["items"].__len__()-1 ==index %}
             <tr class="row6">
               <td class="column0 style35 n style37" rowspan="5">{{index+1}}</td>
               <td
@@ -2967,7 +2967,8 @@
 
             <tr class="row7">
               <td class="column1 style45 s style47" colspan="4">
-                Lorry No. {{item["vehicle_no"]}}
+                Lorry No. {{item["vehicle_no"]}}<br />
+                Farmer Code- {{item['farmerCode']}}
               </td>
             </tr>
             <tr class="row8" style="height: inherit">
@@ -3025,7 +3026,8 @@
 
             <tr class="row7">
               <td class="column1 style45 s style47" colspan="4">
-                Lorry No. {{item["vehicle_no"]}}
+                Lorry No. {{item["vehicle_no"]}}<br />
+                Farmer Code- {{item['farmerCode']}}
               </td>
             </tr>
             <tr class="row8" style="height: inherit"></tr>
@@ -3039,11 +3041,13 @@
               <td class="column0 style38 null"></td>
               <td class="column1 style39 s style41" colspan="4">Total</td>
               <td class="column5 style38 null"></td>
-              <td class="column6 style38 s">{{total_quantity}} {{par}}</td>
+              <td class="column6 style38 s">
+                {{info['total_quantity']}} {{info["par"]}}
+              </td>
               <td class="column7 style67 null"></td>
               <td class="column8 style38 null"></td>
               <td class="column9 style64 n style66" colspan="3">
-                {{total_amount}}
+                {{info["total_amount"]}}
               </td>
               <td class="column12 style100 null"></td>
             </tr>
@@ -3057,7 +3061,7 @@
             </tr>
             <tr class="row13">
               <td class="column0 style70 s style71" colspan="9">
-                INR {{info[amount_in_word]}} Only
+                INR {{info["amount_in_word"]}} Only
               </td>
               <td class="column9 style49 null style50" colspan="3"></td>
             </tr>
@@ -3097,7 +3101,7 @@
                     font-family: 'Calibri';
                     font-size: 11pt;
                   "
-                  >{{info["tex_amount"]}}</span
+                  >Nill</span
                 >
               </td>
             </tr>

@@ -1,12 +1,13 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta
-      name="generator"
-      content="PhpSpreadsheet, https://github.com/PHPOffice/PhpSpreadsheet"
-    />
-    <style type="text/css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      @page {
+        margin: 1cm;
+      }
       * {
         margin: 0;
         padding: 0;
@@ -17,665 +18,27 @@
         font-size: 11pt;
         background-color: white;
       }
-      a.comment-indicator:hover + div.comment {
-        background: #ffd;
-        position: absolute;
-        display: block;
-        border: 1px solid black;
-        padding: 0.5em;
-      }
-      a.comment-indicator {
-        background: red;
-        display: inline-block;
-        border: 1px solid black;
-        width: 0.5em;
-        height: 0.5em;
-      }
-      div.comment {
-        display: none;
+      body {
+        width: 100vw;
+        height: 100vh;
       }
       table {
         border-collapse: collapse;
         page-break-after: always;
+        width: 100%;
       }
-      .gridlines td {
-        border: 1px dotted black;
-      }
-      .gridlines th {
-        border: 1px dotted black;
-      }
-      .b {
-        text-align: center;
-      }
-      .e {
-        text-align: center;
-      }
-      .f {
-        text-align: right;
-      }
-      .inlineStr {
-        text-align: left;
-      }
-      .n {
-        text-align: right;
-      }
-      .s {
-        text-align: left;
-      }
-      td.style0 {
-        vertical-align: bottom;
-        border-bottom: none #000000;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      th.style0 {
-        vertical-align: bottom;
-        border-bottom: none #000000;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      td.style1 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      th.style1 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      td.style2 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: none #000000;
-        font-weight: bold;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 14pt;
-        background-color: white;
-      }
-      th.style2 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: none #000000;
-        font-weight: bold;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 14pt;
-        background-color: white;
-      }
-      td.style3 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: none #000000;
-        font-weight: bold;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      th.style3 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: none #000000;
-        font-weight: bold;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      td.style4 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: none #000000;
-        font-weight: bold;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 20pt;
-        background-color: white;
-      }
-      th.style4 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: none #000000;
-        font-weight: bold;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 20pt;
-        background-color: white;
-      }
-      td.style5 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: 1px solid #000000;
-        border-top: 1px solid #000000 !important;
-        border-left: 1px solid #000000 !important;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      th.style5 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: 1px solid #000000;
-        border-top: 1px solid #000000 !important;
-        border-left: 1px solid #000000 !important;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      td.style6 {
-        vertical-align: left;
-        text-align: center;
-        border-bottom: 1px solid #000000;
-        border-top: 1px solid #000000 !important;
-        border-left: none #000000;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      th.style6 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: 1px solid #000000;
-        border-top: 1px solid #000000 !important;
-        border-left: none #000000;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      td.style7 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: 1px solid #000000;
-        border-top: 1px solid #000000 !important;
-        border-left: none #000000;
-        border-right: 1px solid #000000 !important;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      th.style7 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: 1px solid #000000 !important;
-        border-left: none #000000;
-        border-right: 1px solid #000000 !important;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      td.style8 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: 1px solid #000000 !important;
-        border-top: none #000000;
-        border-left: 1px solid #000000 !important;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      th.style8 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: 1px solid #000000 !important;
-        border-top: none #000000;
-        border-left: 1px solid #000000 !important;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      td.style9 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: 1px solid #000000 !important;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      th.style9 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: 1px solid #000000 !important;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      td.style10 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: 1px solid #000000 !important;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: 1px solid #000000 !important;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      th.style10 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: 1px solid #000000 !important;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: 1px solid #000000 !important;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      td.style11 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: 1px solid #000000 !important;
-        border-left: none #000000;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      th.style11 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: 1px solid #000000 !important;
-        border-left: none #000000;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      td.style12 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: 1px solid #000000 !important;
-        border-left: none #000000;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      th.style12 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: 1px solid #000000 !important;
-        border-left: none #000000;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      td.style13 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: 1px solid #000000;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      th.style13 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      td.style14 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: 1px solid #000000 !important;
-        border-left: 1px solid #000000 !important;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      th.style14 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: 1px solid #000000 !important;
-        border-left: 1px solid #000000 !important;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      td.style15 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: 1px solid #000000;
-        border-top: none #000000;
-        border-left: 1px solid #000000 !important;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      th.style15 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: none #000000;
-        border-left: 1px solid #000000 !important;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      td.style16 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: 1px solid #000000;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: 1px solid #000000 !important;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      th.style16 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: 1px solid #000000 !important;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      td.style17 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      th.style17 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      td.style18 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: 1px solid #000000 !important;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      th.style18 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: 1px solid #000000 !important;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      td.style19 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: 1px solid #000000;
-        border-top: 1px solid #000000 !important;
-        border-left: none #000000;
-        border-right: 1px solid #000000 !important;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      th.style19 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: 1px solid #000000 !important;
-        border-left: none #000000;
-        border-right: 1px solid #000000 !important;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      td.style20 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: 1px solid #000000 !important;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      th.style20 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: 1px solid #000000 !important;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      td.style21 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: 1px solid #000000 !important;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: 1px solid #000000 !important;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      th.style21 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: 1px solid #000000 !important;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: 1px solid #000000 !important;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      td.style22 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: 1px solid #000000 !important;
-        border-top: none #000000;
-        border-left: 1px solid #000000 !important;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      th.style22 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: 1px solid #000000 !important;
-        border-top: none #000000;
-        border-left: 1px solid #000000 !important;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      table.sheet0 col.col0 {
+      table col {
         width: 42pt;
       }
-      table.sheet0 col.col1 {
-        width: 42pt;
-      }
-      table.sheet0 col.col2 {
-        width: 42pt;
-      }
-      table.sheet0 col.col3 {
-        width: 42pt;
-      }
-      table.sheet0 col.col4 {
-        width: 42pt;
-      }
-      table.sheet0 col.col5 {
-        width: 42pt;
-      }
-      table.sheet0 col.col6 {
-        width: 42pt;
-      }
-      table.sheet0 col.col7 {
-        width: 42pt;
-      }
-      table.sheet0 col.col8 {
-        width: 42pt;
-      }
-      table.sheet0 col.col9 {
-        width: 42pt;
-      }
-      table.sheet0 col.col10 {
-        width: 42pt;
-      }
-      table.sheet0 col.col11 {
-        width: 42pt;
-      }
-      table.sheet0 tr {
+      table tr {
         height: 15pt;
       }
     </style>
   </head>
-
   <body>
-    <style>
-      body {
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-      }
-    </style>
     {% for info in data %} {% for index,item in info["items"] | enumerate %}
-    <table
-      border="0"
-      cellpadding="0"
-      cellspacing="0"
-      id="sheet0"
-      class="sheet0 gridlines"
-    >
+
+    <table border="0" cellpadding="0" cellspacing="0" id="sheet0">
       <col class="col0" />
       <col class="col1" />
       <col class="col2" />
@@ -689,130 +52,163 @@
       <col class="col10" />
       <col class="col11" />
       <tbody>
-        <tr class="row0">
+        <tr>
           <td
-            class="column0 style4 s style4"
             colspan="12"
-            style="padding: 20px"
+            style="
+              vertical-align: middle;
+              text-align: center;
+              font-size: 20pt;
+              font-weight: bold;
+              padding: 20px;
+            "
           >
-            सौसर कॉटन प्रोसेसिंग प्राइवेट लिमिटेड सौसर 2023-2024
+            सौसर कॉटन प्रोसेसिंग प्राइवेट लिमिटेड सौसर
+            {{data[index]['academic']}}
           </td>
         </tr>
-        <tr class="row4">
+        <tr>
           <td
-            class="column0 style2 s style3"
             colspan="12"
-            style="padding: 10px"
+            style="
+              vertical-align: middle;
+              text-align: center;
+              font-size: 14pt;
+              font-weight: bold;
+              padding: 10px;
+            "
           >
             छिंदवाड़ा रोड सौसर पिन कोड (480106) मध्य प्रदेश
           </td>
         </tr>
-        <tr class="row7">
+        <tr>
           <td
-            class="column0 style5 s style7"
             colspan="12"
-            style="padding: 10px"
+            style="
+              font-size: 11pt;
+              text-align: center;
+              padding: 10px;
+              border: 1px solid black;
+            "
           >
             तुलाई पर्ची समता 40 मिट्रिक टन
           </td>
         </tr>
-        <tr class="row9">
+        <tr>
+          <td colspan="12" style="padding: 10px"></td>
+        </tr>
+        <tr>
           <td
-            class="column0 style11 s style11"
-            style="padding: 10px"
-            colspan="3"
+            colspan="1"
+            style="
+              vertical-align: bottom;
+              text-align: center;
+
+              font-family: 'Calibri';
+              font-size: 11pt;
+              background-color: white;
+            "
           >
-            न.
+            &nbsp;
           </td>
+          <td colspan="2" style="padding: 10px; text-align: left">न.</td>
           <td
-            class="column3 style11 s style11"
-            style="padding: 10px"
             colspan="3"
+            style="padding: 10px; text-align: left; font-weight: bold"
           >
             {{index+1}}
           </td>
+          <td colspan="3" style="padding: 10px; text-align: right">दिनांक</td>
           <td
-            class="column6 style11 s style11"
-            style="padding: 10px"
             colspan="3"
-          >
-            दिनांक
-          </td>
-          <td
-            class="column9 style12 n style11"
-            style="padding: 10px"
-            colspan="3"
+            style="padding: 10px; text-align: left; font-weight: bold"
           >
             {{item["date"]}}
           </td>
         </tr>
-        <tr class="row11">
-          <td class="column0 style1 s style1" style="padding: 10px" colspan="6">
+        <tr>
+          <td></td>
+          <td colspan="2" style="padding: 10px; text-align: left">
             कृषक का नाम.
           </td>
-          <td class="column6 style1 s style1" style="padding: 10px" colspan="6">
+          <td
+            colspan="3"
+            style="padding: 10px; text-align: left; font-weight: bold"
+          >
             {{item["villagerName"]}}
           </td>
+          <td colspan="6"></td>
         </tr>
-        <tr class="row13">
-          <td class="column0 style1 s style1" style="padding: 10px" colspan="6">
-            &nbsp;गाड़ी न.
-          </td>
-          <td class="column6 style1 s style1" style="padding: 10px" colspan="6">
+        <tr>
+          <td></td>
+          <td colspan="2" style="padding: 10px; text-align: left">गाड़ी न.</td>
+          <td
+            colspan="3"
+            style="padding: 10px; text-align: left; font-weight: bold"
+          >
             {{item["vehicle_no"]}}
           </td>
+          <td colspan="6"></td>
         </tr>
-        <tr class="row15">
-          <td class="column0 style1 s style1" style="padding: 10px" colspan="6">
+        <tr>
+          <td></td>
+          <td colspan="2" style="padding: 10px; text-align: left">
             माल का प्रकार.
           </td>
-          <td class="column6 style1 s style1" style="padding: 10px" colspan="6">
-            {{item["googType"]}}
-          </td>
-        </tr>
-        <tr class="row17">
           <td
-            class="column0 style14 s style11"
-            style="padding: 10px"
-            colspan="6"
+            colspan="3"
+            style="padding: 10px; text-align: left; font-weight: bold"
           >
+            1
+          </td>
+          <td colspan="6"></td>
+        </tr>
+        <tr>
+          <td colspan="12" style="padding: 10px"></td>
+        </tr>
+        <tr style="border: 1px solid black">
+          <td colspan="3" style="padding: 10px; text-align: right">
             भरी गाड़ी का वजन.
           </td>
-          <td class="column6 style6 s style7" style="padding: 10px" colspan="6">
-            {{item["before_wight"]}}
+          <td
+            colspan="9"
+            style="padding: 10px; text-align: left; font-weight: bold"
+          >
+            {{item["good"]}}
           </td>
         </tr>
-        <tr class="row19">
-          <td class="column0 style5 s style6" style="padding: 10px" colspan="6">
+        <tr style="border: 1px solid black">
+          <td colspan="3" style="padding: 10px; text-align: right">
             खाली गाड़ी का वजन.
           </td>
           <td
-            class="column6 style11 s style19"
-            style="padding: 10px"
-            colspan="6"
+            colspan="9"
+            style="padding: 10px; text-align: left; font-weight: bold"
           >
-            {{item["after_wight"]}}
+            {{item["before_wight"]}} {{item['par']}}
           </td>
         </tr>
-        <tr class="row21">
+        <tr style="border: 1px solid black">
+          <td colspan="3" style="padding: 10px; text-align: right">नेट वजन.</td>
           <td
-            class="column0 style15 s style13"
-            colspan="6"
-            style="padding: 10px"
+            colspan="9"
+            style="padding: 10px; text-align: left; font-weight: bold"
           >
-            नेट वजन.
+            {{item["net_wight"]}} {{item['par']}}
           </td>
-          <td
-            class="column6 style13 s style16"
-            colspan="6"
-            style="padding: 10px"
-          >
-            {{item["net_wight"]}}
+        </tr>
+        <tr>
+          <td colspan="12" style="padding: 20px"></td>
+        </tr>
+        <tr>
+          <td colspan="7"></td>
+          <td colspan="5" style="font-weight: bold; text-align: right">
+            सौसर कॉटन प्रोसेसिंग प्राइवेट लिमिटेड सौसर
           </td>
         </tr>
       </tbody>
     </table>
-    {% endfor %} {% endfor %}
+    {% endfor %}{% endfor %}
     <script>
       window.print();
     </script>

@@ -1,841 +1,42 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta
-      name="generator"
-      content="PhpSpreadsheet, https://github.com/PHPOffice/PhpSpreadsheet"
-    />
-
-    <style type="text/css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
       @page {
-        margin: 1cm; //tells Puppeteer to print the PDF with a 1cm margin
+        margin: 1cm;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
       }
       html {
         font-family: Calibri, Arial, Helvetica, sans-serif;
         font-size: 11pt;
         background-color: white;
       }
-      a.comment-indicator:hover + div.comment {
-        background: #ffd;
-        position: absolute;
-        display: block;
-        border: 1px solid black;
-        padding: 0.5em;
-      }
-      a.comment-indicator {
-        background: red;
-        display: inline-block;
-        border: 1px solid black;
-        width: 0.5em;
-        height: 0.5em;
-      }
-      div.comment {
-        display: none;
+      body {
+        width: 100vw;
+        height: 100vh;
       }
       table {
         border-collapse: collapse;
         page-break-after: always;
+        width: 100%;
       }
-      .gridlines td {
-        border: 1px dotted black;
-      }
-      .gridlines th {
-        border: 1px dotted black;
-      }
-      .b {
-        text-align: center;
-      }
-      .e {
-        text-align: center;
-      }
-      .f {
-        text-align: right;
-      }
-      .inlineStr {
-        text-align: left;
-      }
-      .n {
-        text-align: right;
-      }
-      .s {
-        text-align: left;
-      }
-      td.style0 {
-        vertical-align: bottom;
-        border-bottom: none #000000;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      th.style0 {
-        vertical-align: bottom;
-        border-bottom: none #000000;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      td.style1 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      th.style1 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      td.style2 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: none #000000;
-        font-weight: bold;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      th.style2 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: none #000000;
-        font-weight: bold;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      td.style3 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: none #000000;
-        font-weight: bold;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 16pt;
-        background-color: white;
-      }
-      th.style3 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: none #000000;
-        font-weight: bold;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 16pt;
-        background-color: white;
-      }
-      td.style4 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: 1px solid #000000 !important;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: none #000000;
-        font-weight: bold;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 16pt;
-        background-color: white;
-      }
-      th.style4 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: 1px solid #000000 !important;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: none #000000;
-        font-weight: bold;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 16pt;
-        background-color: white;
-      }
-      td.style5 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: 1px solid #000000 !important;
-        border-left: 1px solid #000000 !important;
-        border-right: none #000000;
-        font-weight: bold;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 16pt;
-        background-color: white;
-      }
-      th.style5 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: 1px solid #000000 !important;
-        border-left: 1px solid #000000 !important;
-        border-right: none #000000;
-        font-weight: bold;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 16pt;
-        background-color: white;
-      }
-      td.style6 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: 1px solid #000000 !important;
-        border-left: none #000000;
-        border-right: none #000000;
-        font-weight: bold;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 16pt;
-        background-color: white;
-      }
-      th.style6 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: 1px solid #000000 !important;
-        border-left: none #000000;
-        border-right: none #000000;
-        font-weight: bold;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 16pt;
-        background-color: white;
-      }
-      td.style7 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: 1px solid #000000 !important;
-        border-left: none #000000;
-        border-right: 1px solid #000000 !important;
-        font-weight: bold;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 16pt;
-        background-color: white;
-      }
-      th.style7 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: 1px solid #000000 !important;
-        border-left: none #000000;
-        border-right: 1px solid #000000 !important;
-        font-weight: bold;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 16pt;
-        background-color: white;
-      }
-      td.style8 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: none #000000;
-        border-left: 1px solid #000000 !important;
-        border-right: none #000000;
-        font-weight: bold;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 16pt;
-        background-color: white;
-      }
-      th.style8 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: none #000000;
-        border-left: 1px solid #000000 !important;
-        border-right: none #000000;
-        font-weight: bold;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 16pt;
-        background-color: white;
-      }
-      td.style9 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: 1px solid #000000 !important;
-        font-weight: bold;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 16pt;
-        background-color: white;
-      }
-      th.style9 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: 1px solid #000000 !important;
-        font-weight: bold;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 16pt;
-        background-color: white;
-      }
-      td.style10 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: 1px solid #000000 !important;
-        border-top: none #000000;
-        border-left: 1px solid #000000 !important;
-        border-right: none #000000;
-        font-weight: bold;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 16pt;
-        background-color: white;
-      }
-      th.style10 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: 1px solid #000000 !important;
-        border-top: none #000000;
-        border-left: 1px solid #000000 !important;
-        border-right: none #000000;
-        font-weight: bold;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 16pt;
-        background-color: white;
-      }
-      td.style11 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: 1px solid #000000 !important;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: 1px solid #000000 !important;
-        font-weight: bold;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 16pt;
-        background-color: white;
-      }
-      th.style11 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: 1px solid #000000 !important;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: 1px solid #000000 !important;
-        font-weight: bold;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 16pt;
-        background-color: white;
-      }
-      td.style12 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: 1px solid #000000 !important;
-        border-left: 1px solid #000000 !important;
-        border-right: none #000000;
-        font-weight: bold;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      th.style12 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: 1px solid #000000 !important;
-        border-left: 1px solid #000000 !important;
-        border-right: none #000000;
-        font-weight: bold;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      td.style13 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: 1px solid #000000 !important;
-        border-left: none #000000;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      th.style13 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: none #000000;
-        border-top: 1px solid #000000 !important;
-        border-left: none #000000;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      td.style14 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: 1px solid #000000;
-        border-top: 1px solid #000000 !important;
-        border-left: none #000000;
-        border-right: 1px solid #000000 !important;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      th.style14 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: 1px solid #000000 !important;
-        border-top: 1px solid #000000 !important;
-        border-left: none #000000;
-        border-right: 1px solid #000000 !important;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      td.style15 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: 1px solid #000000 !important;
-        border-top: none #000000;
-        border-left: 1px solid #000000 !important;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      th.style15 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: 1px solid #000000 !important;
-        border-top: none #000000;
-        border-left: 1px solid #000000 !important;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      td.style16 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: 1px solid #000000 !important;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      th.style16 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: 1px solid #000000 !important;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      td.style17 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: 1px solid #000000 !important;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: 1px solid #000000 !important;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      th.style17 {
-        vertical-align: middle;
-        text-align: center;
-        border-bottom: 1px solid #000000 !important;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: 1px solid #000000 !important;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      td.style18 {
-        vertical-align: middle;
-        text-align: left;
-        padding-left: 0px;
-        border-bottom: none #000000;
-        border-top: none #000000;
-        border-left: 1px solid #000000 !important;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      th.style18 {
-        vertical-align: middle;
-        text-align: left;
-        padding-left: 0px;
-        border-bottom: none #000000;
-        border-top: none #000000;
-        border-left: 1px solid #000000 !important;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      td.style19 {
-        vertical-align: middle;
-        text-align: left;
-        padding-left: 0px;
-        border-bottom: none #000000;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      th.style19 {
-        vertical-align: middle;
-        text-align: left;
-        padding-left: 0px;
-        border-bottom: none #000000;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      td.style20 {
-        vertical-align: middle;
-        text-align: left;
-        padding-left: 0px;
-        border-bottom: none #000000;
-        border-top: 1px solid #000000 !important;
-        border-left: 1px solid #000000 !important;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      th.style20 {
-        vertical-align: middle;
-        text-align: left;
-        padding-left: 0px;
-        border-bottom: none #000000;
-        border-top: 1px solid #000000 !important;
-        border-left: 1px solid #000000 !important;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      td.style21 {
-        vertical-align: middle;
-        text-align: left;
-        padding-left: 0px;
-        border-bottom: 1px solid #000000;
-        border-top: 1px solid #000000 !important;
-        border-left: none #000000;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      th.style21 {
-        vertical-align: middle;
-        text-align: left;
-        padding-left: 0px;
-        border-bottom: none #000000;
-        border-top: 1px solid #000000 !important;
-        border-left: none #000000;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      td.style22 {
-        vertical-align: middle;
-        text-align: left;
-        padding-left: 0px;
-        border-bottom: none #000000;
-        border-top: 1px solid #000000 !important;
-        border-left: none #000000;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      th.style22 {
-        vertical-align: middle;
-        text-align: left;
-        padding-left: 0px;
-        border-bottom: none #000000;
-        border-top: 1px solid #000000 !important;
-        border-left: none #000000;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      td.style23 {
-        vertical-align: middle;
-        text-align: left;
-        padding-left: 0px;
-        border-bottom: 1px solid #000000;
-        border-top: 1px solid #000000 !important;
-        border-left: none #000000;
-        border-right: 1px solid #000000 !important;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      th.style23 {
-        vertical-align: middle;
-        text-align: left;
-        padding-left: 0px;
-        border-bottom: none #000000;
-        border-top: 1px solid #000000 !important;
-        border-left: none #000000;
-        border-right: 1px solid #000000 !important;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      td.style24 {
-        vertical-align: middle;
-        text-align: left;
-        padding-left: 0px;
-        border-bottom: none #000000;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: 1px solid #000000 !important;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      th.style24 {
-        vertical-align: middle;
-        text-align: left;
-        padding-left: 0px;
-        border-bottom: none #000000;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: 1px solid #000000 !important;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      td.style25 {
-        vertical-align: middle;
-        text-align: left;
-        padding-left: 0px;
-        border-bottom: 1px solid #000000 !important;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      th.style25 {
-        vertical-align: middle;
-        text-align: left;
-        padding-left: 0px;
-        border-bottom: 1px solid #000000 !important;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      td.style26 {
-        vertical-align: middle;
-        text-align: left;
-        padding-left: 0px;
-        border-bottom: 1px solid #000000 !important;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: 1px solid #000000 !important;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      th.style26 {
-        vertical-align: middle;
-        text-align: left;
-        padding-left: 0px;
-        border-bottom: 1px solid #000000 !important;
-        border-top: none #000000;
-        border-left: none #000000;
-        border-right: 1px solid #000000 !important;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      td.style27 {
-        vertical-align: middle;
-        text-align: left;
-        padding-left: 0px;
-        border-bottom: 1px solid #000000 !important;
-        border-top: none #000000;
-        border-left: 1px solid #000000 !important;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      th.style27 {
-        vertical-align: middle;
-        text-align: left;
-        padding-left: 0px;
-        border-bottom: 1px solid #000000 !important;
-        border-top: none #000000;
-        border-left: 1px solid #000000 !important;
-        border-right: none #000000;
-        color: #000000;
-        font-family: "Calibri";
-        font-size: 11pt;
-        background-color: white;
-      }
-      table.sheet0 col.col0 {
+      table col {
         width: 42pt;
       }
-      table.sheet0 col.col1 {
-        width: 42pt;
-      }
-      table.sheet0 col.col2 {
-        width: 42pt;
-      }
-      table.sheet0 col.col3 {
-        width: 42pt;
-      }
-      table.sheet0 col.col4 {
-        width: 42pt;
-      }
-      table.sheet0 col.col5 {
-        width: 42pt;
-      }
-      table.sheet0 col.col6 {
-        width: 43.37777728pt;
-      }
-      table.sheet0 col.col7 {
-        width: 43.37777728pt;
-      }
-      table.sheet0 col.col8 {
-        width: 43.37777728pt;
-      }
-      table.sheet0 col.col9 {
-        width: 42pt;
-      }
-      table.sheet0 col.col10 {
-        width: 42pt;
-      }
-      table.sheet0 col.col11 {
-        width: 42pt;
-      }
-      table.sheet0 tr {
+      table tr {
         height: 15pt;
       }
     </style>
   </head>
-
   <body>
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-      body {
-        width: 100vw;
-        /* height: 100vh; */
-        display: flex;
-        justify-content: center;
-      }
-    </style>
-    <table
-      border="0"
-      cellpadding="0"
-      cellspacing="0"
-      id="sheet0"
-      class="sheet0 gridlines"
-    >
+    <table border="0" cellpadding="0" cellspacing="0" id="sheet0">
       <col class="col0" />
       <col class="col1" />
       <col class="col2" />
@@ -849,94 +50,198 @@
       <col class="col10" />
       <col class="col11" />
       <tbody>
-        <tr class="row0">
+        <tr style="border: 1px solid black">
           <td
-            class="column0 style5 s style7"
-            style="padding: 20px"
             colspan="12"
+            style="
+              vertical-align: middle;
+              text-align: center;
+              font-size: 20pt;
+              font-weight: bold;
+              padding: 20px;
+            "
           >
             सौसर कॉटन प्रोसेसिंग प्राइवेट लिमिटेड सौसर-2023-2024
           </td>
         </tr>
-        <tr class="row3">
+        <tr style="border: 1px solid black">
           <td
-            class="column0 style12 s style14"
-            style="padding: 10px"
+            style="
+              vertical-align: middle;
+              text-align: center;
+              font-size: 10pt;
+              font-weight: bold;
+              padding: 10px;
+            "
             colspan="12"
           >
             छिंदवाड़ा- रोड सौसर (म.प्र.) पिन कोड- 480106
           </td>
         </tr>
-        <tr class="row5">
+        <tr>
           <td
-            class="column0 style1 s style1"
-            style="padding: 10px"
+            style="
+              vertical-align: middle;
+              text-align: center;
+              font-size: 10pt;
+              font-weight: bold;
+              padding: 10px;
+            "
             colspan="12"
           >
-            &nbsp;-: गेट - पास :-
+            -: गेट – पास :-
           </td>
         </tr>
-        {% for index,item in items | enumerate %}
-        <tr class="row7">
+        {%for index,item in items | enumerate %}
+        <tr>
           <td
-            class="column0 style20 s style21"
-            style="padding: 10px"
-            colspan="3"
+            colspan="1"
+            rowspan="2"
+            style="
+              text-align: left;
+              border-left: 1px solid black;
+              border-top: 1px solid black;
+              border-bottom: 1px solid black;
+            "
           >
             नंबर:-
           </td>
-          <td class="column3 style21 s style21" colspan="3">{{index+1}}</td>
-          <td class="column6 style21 s style21" colspan="3">दिनांक:-</td>
-          <td class="column9 style22 n style23" colspan="3">
+
+          <td
+            colspan="3"
+            rowspan="2"
+            style="
+              text-align: left;
+              border-top: 1px solid black;
+              border-bottom: 1px solid black;
+              font-weight: bold;
+            "
+          >
+            {{index+1}}
+          </td>
+          <td
+            colspan="2"
+            rowspan="2"
+            style="border-top: 1px solid black; border-bottom: 1px solid black"
+          ></td>
+          <td
+            colspan="2"
+            rowspan="2"
+            style="
+              border-top: 1px solid black;
+              border-bottom: 1px solid black;
+              text-align: right;
+            "
+          >
+            दिनांक:-&nbsp;&nbsp;&nbsp;&nbsp;
+          </td>
+          <td
+            colspan="4"
+            rowspan="2"
+            style="
+              border-top: 1px solid black;
+              border-right: 1px solid black;
+              border-bottom: 1px solid black;
+              font-weight: bold;
+            "
+          >
             {{item["date"]}}
           </td>
         </tr>
-        <tr class="row9">
+        <tr></tr>
+        <tr>
           <td
-            class="column0 style20 s style21"
-            colspan="6"
-            style="padding: 10px"
+            colspan="2"
+            style="
+              border-top: 1px solid black;
+              border-left: 1px solid black;
+              /* border-right: 1px solid black; */
+              border-bottom: 1px solid black;
+              text-align: left;
+            "
+            rowspan="2"
           >
             माल वाहक का नाम:-
           </td>
-          <td class="column6 style21 s style23" colspan="6">
+          <td
+            colspan="10"
+            rowspan="2"
+            style="
+              border-top: 1px solid black;
+              /* border-left: 1px solid black; */
+              border-right: 1px solid black;
+              border-bottom: 1px solid black;
+              font-weight: bold;
+            "
+          >
             {{item["villagerName"]}}
           </td>
         </tr>
-        <tr class="row11">
+        <tr></tr>
+        <tr>
           <td
-            class="column0 style20 s style21"
-            style="padding: 10px"
-            colspan="6"
+            colspan="2"
+            rowspan="2"
+            style="
+              border-top: 1px solid black;
+              border-left: 1px solid black;
+              /* border-right: 1px solid black; */
+              border-bottom: 1px solid black;
+              text-align: left;
+            "
           >
             माल का विवरण:-
           </td>
-          <td class="column6 style21 s style23" colspan="6">
+          <td
+            colspan="10"
+            rowspan="2"
+            style="
+              border-top: 1px solid black;
+              /* border-left: 1px solid black; */
+              border-right: 1px solid black;
+              border-bottom: 1px solid black;
+              font-weight: bold;
+            "
+          >
             {{item["good"]}}
           </td>
         </tr>
-        <tr class="row13">
+        <tr></tr>
+        <tr>
           <td
-            class="column0 style20 s style21"
-            style="padding: 10px"
-            colspan="6"
+            colspan="2"
+            rowspan="2"
+            style="
+              border-top: 1px solid black;
+              border-left: 1px solid black;
+              /* border-right: 1px solid black; */
+              border-bottom: 1px solid black;
+              text-align: left;
+            "
           >
             गाड़ी नंबर:-
           </td>
-          <td class="column6 style21 s style23" colspan="6">
+          <td
+            colspan="10"
+            rowspan="2"
+            style="
+              border-top: 1px solid black;
+              /* border-left: 1px solid black; */
+              border-right: 1px solid black;
+              border-bottom: 1px solid black;
+              font-weight: bold;
+            "
+          >
             {{item["vehicle_no"]}}
           </td>
         </tr>
         <tr></tr>
         {% endfor %}
-        <tr class="row15">
-          <td
-            class="column0 style2 s style2"
-            colspan="12"
-            style="padding: 10px"
-          >
-            सौसर कॉटन प्रोसेसिंग प्राइवेट लिमिटेड सौसर. <br />(NOTE GATE PASS IN
-            COMPANY SEAL AND SIGNITURE)
+        <tr></tr>
+        <tr>
+          <td colspan="6"></td>
+          <td colspan="6" style="text-align: right; font-weight: bold">
+            सौसर कॉटन प्रोसेसिंग प्राइवेट लिमिटेड सौसर.
           </td>
         </tr>
       </tbody>

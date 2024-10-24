@@ -21,9 +21,9 @@ class Bill(BaseModel):
     quantity: float
     rate: float
     par: str
-    villager_name: str
+    framerName: str
     vehicle_no: str
-    good_type: str
+    farmerCode: str
     before_wight: str
     after_wight: str
 
@@ -42,9 +42,9 @@ def check_excel(file_name: str):
             "quantity",
             "rate",
             "par",
-            "villagerName",
+            "framerName",
             "vehicle_no",
-            "goodType",
+            "farmerCode",
             "before_wight",
             "after_wight",
             "createdAt",
@@ -113,9 +113,9 @@ def create_bill(file_name: str, data: Bill):
         "rate": data.rate,
         "par": data.par,
 
-        "villagerName": data.villager_name,
+        "framerName": data.framerName,
         "vehicle_no": data.vehicle_no,
-        "goodType": data.good_type,
+        "farmerCode": data.farmerCode,
         "before_wight": data.before_wight,
         "after_wight": data.after_wight,
 
