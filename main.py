@@ -159,7 +159,7 @@ async def bill_print_all(request: Request,  file_name: str):
 @app.get("/get_pass_print/{file_name}/{id}")
 async def get_pass_print(request: Request, id: str, file_name: str):
     data = read_data(os.path.join("./database", file_name), id)
-
+    print(data)
     return templates.TemplateResponse(
         request=request, name="get_pass.html",
         context={
@@ -197,7 +197,7 @@ async def get_pass_print_all(request: Request, file_name: str):
                 "good": i['goods'],
 
 
-                "villagerName": i['framerName'],
+                "villagerName": i['farmerName'],
 
 
                 "vehicle_no": i['vehicle_no'],
