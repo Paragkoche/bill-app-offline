@@ -163,7 +163,7 @@ async def get_pass_print(request: Request, id: str, file_name: str):
     return templates.TemplateResponse(
         request=request, name="get_pass.html",
         context={
-
+            "year": data['year'],
             "items": [{
                 "date": data["createdAt"].strftime(
                     "%d-%b-%y") if type(data['createdAt']) is pd.Timestamp else data["createdAt"],
@@ -190,7 +190,7 @@ async def get_pass_print_all(request: Request, file_name: str):
     return templates.TemplateResponse(
         request=request, name="all_get_pass.html",
         context={
-
+            "year": data[0]['year'],
             "data": [{"items": [{
                 "date": i["createdAt"].strftime(
                     "%d-%b-%y") if type(i['createdAt']) is pd.Timestamp else i["createdAt"],
@@ -230,13 +230,14 @@ async def get_wight_print(request: Request, id: str, file_name: str):
                     "par": i['par'],
                     "before_wight": i['before_wight'],
                     "after_wight": i['after_wight'],
-                    "net_wight": i['after_wight'] - i['before_wight']
+                    "net_wight": i['after_wight'] - i['before_wight'],
+
                 })
     return templates.TemplateResponse(
         request=request, name="wight.html",
         context={
             "items": s,
-            "academic": f"{data['createdAt'].year-1}-{data['createdAt'].year}",
+            "year": data['year']
         }
     )
 
@@ -266,7 +267,7 @@ async def get_wight_print_all(request: Request, file_name: str):
                         "net_wight": i['after_wight'] - i['before_wight']
                     })
             d.append(
-                {"items": s, "academic": f"{j['createdAt'].year-1}-{j['createdAt'].year}"})
+                {"items": s, "year": f"{j['year']}"})
     return templates.TemplateResponse(
         request=request, name="all_wight.html",
         context={

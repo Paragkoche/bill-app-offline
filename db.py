@@ -26,6 +26,7 @@ class Bill(BaseModel):
     farmerCode: str
     before_wight: str
     after_wight: str
+    year: str
 
 # Function to check if the Excel file exists and create it if it does not
 
@@ -48,6 +49,7 @@ def check_excel(file_name: str):
             "before_wight",
             "after_wight",
             "createdAt",
+            "year"
         ]
 
         # Create an empty DataFrame with the specified columns
@@ -118,6 +120,7 @@ def create_bill(file_name: str, data: Bill):
         "farmerCode": data.farmerCode,
         "before_wight": data.before_wight,
         "after_wight": data.after_wight,
+        "year": data.year
 
     }
     # Append the new bill to the DataFrame
