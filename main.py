@@ -228,9 +228,9 @@ async def get_wight_print(request: Request, id: str, file_name: str):
                     "good": i['goods'],
                     "vehicle_no": i['vehicle_no'],
                     "par": i['par'],
-                    "before_wight": i['before_wight'],
-                    "after_wight": i['after_wight'],
-                    "net_wight": i['after_wight'] - i['before_wight'],
+                    "before_wight": "{:.2f}".format(i['before_wight']),
+                    "after_wight": "{:.2f}".format(i['after_wight']),
+                    "net_wight": "{:.2f}".format(i['after_wight'] - i['before_wight']),
 
                 })
     return templates.TemplateResponse(
@@ -262,9 +262,9 @@ async def get_wight_print_all(request: Request, file_name: str):
                         "good": i['goods'],
                         "par": i['par'],
                         "vehicle_no": i['vehicle_no'],
-                        "before_wight": i['before_wight'],
-                        "after_wight": i['after_wight'],
-                        "net_wight": i['after_wight'] - i['before_wight']
+                        "before_wight": "{:.2f}".format(i['before_wight']),
+                        "after_wight": "{:.2f}".format(i['after_wight']),
+                        "net_wight": "{:.2f}".format(i['after_wight'] - i['before_wight'])
                     })
             d.append(
                 {"items": s, "year": f"{j['year']}"})
