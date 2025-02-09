@@ -299,7 +299,7 @@ async def upload_excel(request: Request, file: UploadFile = File(...)):
         "id", "invoiceNo",  "supplierName", "supplierOtherInfo", "createdAt",
         "goods", "hsn_sac", "quantity", "rate", "par",
         "farmerName", "vehicle_no", "farmerCode",
-        "before_wight", "after_wight"
+        "before_wight", "after_wight", "in_time", "out_time"
     ]
     try:
       # Read the uploaded Excel file into DataFrames
@@ -470,6 +470,46 @@ async def create_pdf(filename: str, request: Request):
             wight_content = wight_response.text
             await convert_html_to_pdf(wight_content, f"{invoice_dir}/wight.pdf")
     return {"message": "PDFs generated successfully"}
+
+
+@app.get("/get_dot_matrix_print/{filename}/{id}")
+async def dot_matrix(request: Request, filename: str, id: str):
+    data = read_data(os.path.join("./database", filename), id)
+    print(type(data['in_time']))
+    return templates.TemplateResponse(
+        request=request, name="dot_matrex.html",
+        context={
+            **data,
+            "date": data['createdAt'].strftime(
+                "%d/%m/%y"),
+            "before_wight": "{}".format(data['before_wight']),
+            "after_wight": "{}".format(data['after_wight']),
+            "net_wight": "{}".format(data['after_wight'] - data['before_wight']),
+            "wight_in_word": " ".join([num2words.num2words(i, lang="en_IN",) for i in str(data['after_wight'] - data['before_wight'])]),
+            "in_time": data['in_time'].strftime("%I:%M %p"),
+            "out_time": data['in_time'].strftime("%I:%M %p"),
+            # .join([num2words.num2words(i, lang="en_IN",) for i in str("{:.2f}".format(data['after_wight'] - data['before_wight']))])
+
+        }
+    )
+
+
+@app.get("/get_purchase_print/{filename}/{id}")
+async def dot_matrix(request: Request, filename: str, id: str):
+    data = read_data(os.path.join("./database", filename), id)
+    print(data)
+    return templates.TemplateResponse(
+        request=request, name="purchase.html",
+        context={
+            **data,
+            "quantity": "{:.2f}".format(float(data['quantity'])),
+            "rate": "{:.2f}".format(float(data['rate'])),
+            "date": data['createdAt'].strftime(
+                "%d-%m-%y"),
+            "total": "{:.2f}".format(data['quantity'] * data['rate'])
+        }
+    )
+    # return data
 
 
 @app.on_event("startup")

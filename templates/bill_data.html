@@ -467,6 +467,20 @@
         >
           Weight
         </button>
+        <button
+          onclick="dot_matrix_print()"
+          type="button"
+          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        >
+          dot-matrix
+        </button>
+        <button
+          onclick="Purchase_print()"
+          type="button"
+          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        >
+          Purchase
+        </button>
       </div>
     </div>
   </div>
@@ -673,6 +687,20 @@
   function wight_print() {
     window.open(
       `/get_wight_print/{{filename}}/${_id}`,
+      "google",
+      "height=720,width=1080"
+    );
+  }
+  function dot_matrix_print() {
+    window.open(
+      `/get_dot_matrix_print/{{filename}}/${_id}`,
+      "google",
+      "height=720,width=1080"
+    );
+  }
+  function Purchase_print() {
+    window.open(
+      `/get_purchase_print/{{filename}}/${_id}`,
       "google",
       "height=720,width=1080"
     );
