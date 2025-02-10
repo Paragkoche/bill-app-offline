@@ -1,188 +1,613 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap");
+    </style>
+    <style type="text/css">
+      html {
+        font-family: "Source Code Pro", serif;
+        font-size: 11pt;
+        background-color: white;
+      }
+      a.comment-indicator:hover + div.comment {
+        background: #ffd;
+        position: absolute;
+        display: block;
+        border: 1px dashed black;
+        padding: 0.5em;
+      }
+      a.comment-indicator {
+        background: red;
+        display: inline-block;
+        border: 1px dashed black;
+        width: 0.5em;
+        height: 0.5em;
+      }
+      div.comment {
+        display: none;
+      }
+      table {
+        border-collapse: collapse;
+        page-break-after: always;
+      }
+      .gridlines td {
+        border: 1px dotted black;
+      }
+      .gridlines th {
+        border: 1px dotted black;
+      }
+      .b {
+        text-align: center;
+      }
+      .e {
+        text-align: center;
+      }
+      .f {
+        text-align: right;
+      }
+      .inlineStr {
+        text-align: left;
+      }
+      .n {
+        text-align: right;
+      }
+      .s {
+        text-align: left;
+      }
+      td.style0 {
+        vertical-align: bottom;
+        border-bottom: none #000000;
+        border-top: none #000000;
+        border-left: none #000000;
+        border-right: none #000000;
+        color: #000000;
+        font-family: "Source Code Pro", serif;
+        font-size: 11pt;
+        background-color: white;
+      }
+      th.style0 {
+        vertical-align: bottom;
+        border-bottom: none #000000;
+        border-top: none #000000;
+        border-left: none #000000;
+        border-right: none #000000;
+        color: #000000;
+        font-family: "Source Code Pro", serif;
+        font-size: 11pt;
+        background-color: white;
+      }
+      td.style1 {
+        vertical-align: bottom;
+        text-align: center;
+        border-bottom: none #000000;
+        border-top: none #000000;
+        border-left: none #000000;
+        border-right: none #000000;
+        color: #000000;
+        font-family: "Source Code Pro", serif;
+        font-size: 11pt;
+        background-color: white;
+      }
+      th.style1 {
+        vertical-align: bottom;
+        text-align: center;
+        border-bottom: none #000000;
+        border-top: none #000000;
+        border-left: none #000000;
+        border-right: none #000000;
+        color: #000000;
+        font-family: "Source Code Pro", serif;
+        font-size: 11pt;
+        background-color: white;
+      }
+      td.style2 {
+        vertical-align: bottom;
+        border-bottom: none #000000;
+        border-top: none #000000;
+        border-left: none #000000;
+        border-right: none #000000;
+        color: #000000;
+        font-family: "Source Code Pro", serif;
+        font-size: 11pt;
+        background-color: white;
+      }
+      th.style2 {
+        vertical-align: bottom;
+        border-bottom: none #000000;
+        border-top: none #000000;
+        border-left: none #000000;
+        border-right: none #000000;
+        color: #000000;
+        font-family: "Source Code Pro", serif;
+        font-size: 11pt;
+        background-color: white;
+      }
+      td.style3 {
+        vertical-align: bottom;
+        text-align: left;
+        padding-left: 0px;
+        border-bottom: none #000000;
+        border-top: none #000000;
+        border-left: none #000000;
+        border-right: none #000000;
+        color: #000000;
+        font-family: "Source Code Pro", serif;
+        font-size: 11pt;
+        background-color: white;
+      }
+      th.style3 {
+        vertical-align: bottom;
+        text-align: left;
+        padding-left: 0px;
+        border-bottom: none #000000;
+        border-top: none #000000;
+        border-left: none #000000;
+        border-right: none #000000;
+        color: #000000;
+        font-family: "Source Code Pro", serif;
+        font-size: 11pt;
+        background-color: white;
+      }
+      td.style4 {
+        vertical-align: bottom;
+        text-align: right;
+        padding-right: 0px;
+        border-bottom: none #000000;
+        border-top: none #000000;
+        border-left: none #000000;
+        border-right: none #000000;
+        color: #000000;
+        font-family: "Source Code Pro", serif;
+        font-size: 11pt;
+        background-color: white;
+      }
+      th.style4 {
+        vertical-align: bottom;
+        text-align: right;
+        padding-right: 0px;
+        border-bottom: none #000000;
+        border-top: none #000000;
+        border-left: none #000000;
+        border-right: none #000000;
+        color: #000000;
+        font-family: "Source Code Pro", serif;
+        font-size: 11pt;
+        background-color: white;
+      }
+      td.style5 {
+        vertical-align: bottom;
+        border-bottom: 1px dashed #000000 !important;
+        border-top: none #000000;
+        border-left: none #000000;
+        border-right: none #000000;
+        color: #000000;
+        font-family: "Source Code Pro", serif;
+        font-size: 11pt;
+        background-color: white;
+      }
+      th.style5 {
+        vertical-align: bottom;
+        border-bottom: 1px dashed #000000 !important;
+        border-top: none #000000;
+        border-left: none #000000;
+        border-right: none #000000;
+        color: #000000;
+        font-family: "Source Code Pro", serif;
+        font-size: 11pt;
+        background-color: white;
+      }
+      td.style6 {
+        vertical-align: bottom;
+        text-align: left;
+        padding-left: 0px;
+        border-bottom: none #000000;
+        border-top: none #000000;
+        border-left: none #000000;
+        border-right: none #000000;
+        color: #000000;
+        font-family: "Source Code Pro", serif;
+        font-size: 11pt;
+        background-color: white;
+      }
+      th.style6 {
+        vertical-align: bottom;
+        text-align: left;
+        padding-left: 0px;
+        border-bottom: none #000000;
+        border-top: none #000000;
+        border-left: none #000000;
+        border-right: none #000000;
+        color: #000000;
+        font-family: "Source Code Pro", serif;
+        font-size: 11pt;
+        background-color: white;
+      }
+      td.style7 {
+        vertical-align: top;
+        text-align: left;
+        padding-left: 0px;
+        border-bottom: none #000000;
+        border-top: 1px dashed #000000 !important;
+        border-left: none #000000;
+        border-right: none #000000;
+        color: #000000;
+        font-family: "Source Code Pro", serif;
+        font-size: 11pt;
+        background-color: white;
+      }
+      th.style7 {
+        vertical-align: top;
+        text-align: left;
+        padding-left: 0px;
+        border-bottom: none #000000;
+        border-top: 1px dashed #000000 !important;
+        border-left: none #000000;
+        border-right: none #000000;
+        color: #000000;
+        font-family: "Source Code Pro", serif;
+        font-size: 11pt;
+        background-color: white;
+      }
+      td.style8 {
+        vertical-align: bottom;
+        text-align: center;
+        border-bottom: none #000000;
+        border-top: 1px dashed #000000 !important;
+        border-left: none #000000;
+        border-right: none #000000;
+        color: #000000;
+        font-family: "Source Code Pro", serif;
+        font-size: 11pt;
+        background-color: white;
+      }
+      th.style8 {
+        vertical-align: bottom;
+        text-align: center;
+        border-bottom: none #000000;
+        border-top: 1px dashed #000000 !important;
+        border-left: none #000000;
+        border-right: none #000000;
+        color: #000000;
+        font-family: "Source Code Pro", serif;
+        font-size: 11pt;
+        background-color: white;
+      }
+      td.style9 {
+        vertical-align: top;
+        text-align: left;
+        padding-left: 0px;
+        border-bottom: 1px dashed #000000 !important;
+        border-top: none #000000;
+        border-left: none #000000;
+        border-right: none #000000;
+        color: #000000;
+        font-family: "Source Code Pro", serif;
+        font-size: 11pt;
+        background-color: white;
+      }
+      th.style9 {
+        vertical-align: top;
+        text-align: left;
+        padding-left: 0px;
+        border-bottom: 1px dashed #000000 !important;
+        border-top: none #000000;
+        border-left: none #000000;
+        border-right: none #000000;
+        color: #000000;
+        font-family: "Source Code Pro", serif;
+        font-size: 11pt;
+        background-color: white;
+      }
+      td.style10 {
+        vertical-align: bottom;
+        text-align: center;
+        border-bottom: 1px dashed #000000 !important;
+        border-top: none #000000;
+        border-left: none #000000;
+        border-right: none #000000;
+        color: #000000;
+        font-family: "Source Code Pro", serif;
+        font-size: 11pt;
+        background-color: white;
+      }
+      th.style10 {
+        vertical-align: bottom;
+        text-align: center;
+        border-bottom: 1px dashed #000000 !important;
+        border-top: none #000000;
+        border-left: none #000000;
+        border-right: none #000000;
+        color: #000000;
+        font-family: "Source Code Pro", serif;
+        font-size: 11pt;
+        background-color: white;
+      }
+      table.sheet0 col.col0 {
+        width: 42pt;
+      }
+      table.sheet0 col.col1 {
+        width: 42pt;
+      }
+      table.sheet0 col.col2 {
+        width: 42pt;
+      }
+      table.sheet0 col.col3 {
+        width: 42pt;
+      }
+      table.sheet0 col.col4 {
+        width: 42pt;
+      }
+      table.sheet0 col.col5 {
+        width: 42pt;
+      }
+      table.sheet0 col.col6 {
+        width: 42pt;
+      }
+      table.sheet0 col.col7 {
+        width: 42pt;
+      }
+      table.sheet0 col.col8 {
+        width: 42pt;
+      }
+      table.sheet0 col.col9 {
+        width: 42pt;
+      }
+      table.sheet0 col.col10 {
+        width: 42pt;
+      }
+      table.sheet0 col.col11 {
+        width: 42pt;
+      }
+      table.sheet0 tr {
+        height: 15pt;
+      }
+      table.sheet0 tr.row0 {
+        height: 16.5pt;
+      }
+      table.sheet0 tr.row1 {
+        height: 16.5pt;
+      }
+      table.sheet0 tr.row2 {
+        height: 16.5pt;
+      }
+      table.sheet0 tr.row3 {
+        height: 16.5pt;
+      }
+      table.sheet0 tr.row4 {
+        height: 16.5pt;
+      }
+      table.sheet0 tr.row5 {
+        height: 16.5pt;
+      }
+      table.sheet0 tr.row6 {
+        height: 16.5pt;
+      }
+      table.sheet0 tr.row7 {
+        height: 16.5pt;
+      }
+      table.sheet0 tr.row8 {
+        height: 16.5pt;
+      }
+      table.sheet0 tr.row9 {
+        height: 16.5pt;
+      }
+      table.sheet0 tr.row10 {
+        height: 16.5pt;
+      }
+      table.sheet0 tr.row11 {
+        height: 16.5pt;
+      }
+      table.sheet0 tr.row12 {
+        height: 16.5pt;
+      }
+    </style>
+    <style>
+      @page {
+        margin-left: 0.7in;
+        margin-right: 0.7in;
+        margin-top: 0.75in;
+        margin-bottom: 0.75in;
+      }
+      body {
+        margin-left: 0.7in;
+        margin-right: 0.7in;
+        margin-top: 0.75in;
+        margin-bottom: 0.75in;
+      }
+    </style>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Document</title>
-  <style>
-    @page {
-      margin: 1cm;
-    }
+  <body>
+    {% for index,item in items | enumerate %}
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    html {
-      font-family: Calibri, Arial, Helvetica, sans-serif;
-      font-size: 11pt;
-      background-color: white;
-    }
-
-    body {
-      width: 100vw;
-      height: 100vh;
-    }
-
-    table {
-      border-collapse: collapse;
-      page-break-after: always;
-      width: 100%;
-    }
-
-    table col {
-      width: 42pt;
-    }
-
-    table tr {
-      height: 15pt;
-    }
-  </style>
-</head>
-
-<body>
-  {% for index,item in items | enumerate %}
-
-  <table border="0" cellpadding="0" cellspacing="0" id="sheet0">
-    <col class="col0" />
-    <col class="col1" />
-    <col class="col2" />
-    <col class="col3" />
-    <col class="col4" />
-    <col class="col5" />
-    <col class="col6" />
-    <col class="col7" />
-    <col class="col8" />
-    <col class="col9" />
-    <col class="col10" />
-    <col class="col11" />
-    <tbody>
-      <tr>
-        <td colspan="12" style="
-              vertical-align: middle;
-              text-align: center;
-              font-size: 20pt;
-              font-weight: bold;
-              padding: 20px;
-            ">
-          सौसर कॉटन प्रोसेसिंग प्राइवेट लिमिटेड सौसर {{year}}
-        </td>
-      </tr>
-      <tr>
-        <td colspan="12" style="
-              vertical-align: middle;
-              text-align: center;
-              font-size: 14pt;
-              font-weight: bold;
-              padding: 10px;
-            ">
-          छिंदवाड़ा रोड सौसर पिन कोड (480106) मध्य प्रदेश
-        </td>
-      </tr>
-      <tr>
-        <td colspan="12" style="
-              font-size: 11pt;
-              text-align: center;
-              padding: 10px;
-              border: 1px solid black;
-            ">
-          तुलाई पर्ची समता 40 मिट्रिक टन
-        </td>
-      </tr>
-      <tr>
-        <td colspan="12" style="padding: 10px"></td>
-      </tr>
-      <tr>
-        <td colspan="1" style="
-              vertical-align: bottom;
-              text-align: center;
-
-              font-family: 'Calibri';
-              font-size: 11pt;
-              background-color: white;
-            ">
-          &nbsp;
-        </td>
-        <td colspan="2" style="padding: 10px; text-align: left">न.</td>
-        <td colspan="3" style="padding: 10px; text-align: left; font-weight: bold">
-          {{index+1}}
-        </td>
-        <td colspan="3" style="padding: 10px; text-align: right">दिनांक</td>
-        <td colspan="3" style="padding: 10px; text-align: left; font-weight: bold">
-          {{item["date"]}}
-        </td>
-      </tr>
-      <tr>
-        <td></td>
-        <td colspan="2" style="padding: 10px; text-align: left">
-          कृषक का नाम.
-        </td>
-        <td colspan="3" style="padding: 10px; text-align: left; font-weight: bold">
-          {{item["villagerName"]}}
-        </td>
-        <td colspan="6"></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td colspan="2" style="padding: 10px; text-align: left">गाड़ी न.</td>
-        <td colspan="3" style="padding: 10px; text-align: left; font-weight: bold">
-          {{item["vehicle_no"]}}
-        </td>
-        <td colspan="6"></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td colspan="2" style="padding: 10px; text-align: left">
-          माल का प्रकार.
-        </td>
-        <td colspan="3" style="padding: 10px; text-align: left; font-weight: bold">
-          {{item["good"]}}
-        </td>
-        <td colspan="6"></td>
-      </tr>
-      <tr>
-        <td colspan="12" style="padding: 10px"></td>
-      </tr>
-      <tr style="border: 1px solid black">
-        <td colspan="3" style="padding: 10px; text-align: right">
-          भरी गाड़ी का वजन.
-        </td>
-        <td colspan="9" style="padding: 10px; text-align: left; font-weight: bold">
-          {{item["after_wight"]}} {{item['par']}}
-        </td>
-      </tr>
-      <tr style="border: 1px solid black">
-        <td colspan="3" style="padding: 10px; text-align: right">
-          खाली गाड़ी का वजन.
-        </td>
-        <td colspan="9" style="padding: 10px; text-align: left; font-weight: bold">
-          {{item["before_wight"]}} {{item['par']}}
-        </td>
-      </tr>
-      <tr style="border: 1px solid black">
-        <td colspan="3" style="padding: 10px; text-align: right">नेट वजन.</td>
-        <td colspan="9" style="padding: 10px; text-align: left; font-weight: bold">
-          {{item["net_wight"]}} {{item['par']}}
-        </td>
-      </tr>
-      <tr>
-        <td colspan="12" style="padding: 20px"></td>
-      </tr>
-      <tr>
-        <td colspan="7"></td>
-        <td colspan="5" style="font-weight: bold; text-align: right">
-          सौसर कॉटन प्रोसेसिंग प्राइवेट लिमिटेड सौसर
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  {% endfor %}
-  <script>
-    window.print();
-  </script>
-</body>
-
+    <table
+      border="0"
+      cellpadding="0"
+      cellspacing="0"
+      id="sheet0"
+      class="sheet0 gridlines"
+    >
+      <col class="col0" />
+      <col class="col1" />
+      <col class="col2" />
+      <col class="col3" />
+      <col class="col4" />
+      <col class="col5" />
+      <col class="col6" />
+      <col class="col7" />
+      <col class="col8" />
+      <col class="col9" />
+      <col class="col10" />
+      <col class="col11" />
+      <tbody>
+        <tr class="row0">
+          <td class="column0 style1 s style1" colspan="12">WEIGHT - PATTI</td>
+        </tr>
+        <tr class="row1">
+          <td class="column0 style1 s style1" colspan="12">
+            SASAR COTTON PROCESSING PVT. LTD.
+          </td>
+        </tr>
+        <tr class="row2">
+          <td class="column0 style1 s style1" colspan="12">
+            CHHINDWARA ROAD SAUSAR (480106)
+          </td>
+        </tr>
+        <tr class="row3">
+          <td class="column0 style2 null"></td>
+          <td class="column1 style2 null"></td>
+          <td class="column2 style2 null"></td>
+          <td class="column3 style2 null"></td>
+          <td class="column4 style2 null"></td>
+          <td class="column5 style2 null"></td>
+          <td class="column6 style2 null"></td>
+          <td class="column7 style2 null"></td>
+          <td class="column8 style2 null"></td>
+          <td class="column9 style2 null"></td>
+          <td class="column10 style2 null"></td>
+          <td class="column11 style2 null"></td>
+        </tr>
+        <tr class="row4">
+          <td class="column0 style3 s style3" colspan="3">RST NO.</td>
+          <td class="column3 style3 n style3" colspan="3">{{index+1}}</td>
+          <td class="column6 style4 s style4" colspan="3">VEHICLE NO.:</td>
+          <td class="column9 style3 s style3" colspan="3">
+            {{item["vehicle_no"]}}
+          </td>
+        </tr>
+        <tr class="row5">
+          <td class="column0 style3 s style3" colspan="2">CUSTOMER</td>
+          <td
+            class="column3 style3 s style3"
+            colspan="5"
+            style="font-size: smaller"
+          >
+            Ramchandra Shanker Dhabale
+          </td>
+          <td class="column7 style4 s style4" colspan="2">MATERIAL :</td>
+          <td
+            class="column9 style3 s style3"
+            colspan="3"
+            style="font-size: smaller"
+          >
+            {{item["good"]}}
+          </td>
+        </tr>
+        <tr class="row6">
+          <td class="column0 style5 null"></td>
+          <td class="column1 style5 null"></td>
+          <td class="column2 style5 null"></td>
+          <td class="column3 style5 null"></td>
+          <td class="column4 style5 null"></td>
+          <td class="column5 style5 null"></td>
+          <td class="column6 style5 null"></td>
+          <td class="column7 style5 null"></td>
+          <td class="column8 style5 null"></td>
+          <td class="column9 style5 null"></td>
+          <td class="column10 style5 null"></td>
+          <td class="column11 style5 null"></td>
+        </tr>
+        <tr class="row7">
+          <td class="column0 style3 s style3" colspan="2">Gross Wt.:</td>
+          <td class="column2 style3 s style3" colspan="2">
+            {{item["after_wight"]}} KG
+          </td>
+          <td class="column4 style4 s style4" colspan="2">Date:</td>
+          <td class="column6 style6 n style3" colspan="2">{{item["date"]}}</td>
+          <td class="column8 style4 s style4" colspan="2">Time:-</td>
+          <td class="column10 style3 s style3" colspan="2">
+            {{item["in_time"]}}
+          </td>
+        </tr>
+        <tr class="row8">
+          <td class="column0 style3 s style3" colspan="2">Tare Wt.:</td>
+          <td class="column2 style3 s style3" colspan="2">
+            {{item["before_wight"]}} KG
+          </td>
+          <td class="column4 style4 s style4" colspan="2">Date:</td>
+          <td class="column6 style6 n style3" colspan="2">{{item["date"]}}</td>
+          <td class="column8 style4 s style4" colspan="2">Time:-</td>
+          <td class="column10 style3 s style3" colspan="2">
+            {{item["out_time"]}}
+          </td>
+        </tr>
+        <tr class="row9">
+          <td class="column0 style3 s style3" colspan="2">Nett Wt.:</td>
+          <td class="column2 style3 s style3" colspan="2">
+            {{item["net_wight"]}} KG
+          </td>
+          <td class="column4 style2 null"></td>
+          <td class="column5 style2 null"></td>
+          <td class="column6 style2 null"></td>
+          <td class="column7 style2 null"></td>
+          <td class="column8 style2 null"></td>
+          <td class="column9 style2 null"></td>
+          <td class="column10 style2 null"></td>
+          <td class="column11 style2 null"></td>
+        </tr>
+        <tr class="row10">
+          <td class="column0 style5 null"></td>
+          <td class="column1 style5 null"></td>
+          <td class="column2 style5 null"></td>
+          <td class="column3 style5 null"></td>
+          <td class="column4 style5 null"></td>
+          <td class="column5 style5 null"></td>
+          <td class="column6 style5 null"></td>
+          <td class="column7 style5 null"></td>
+          <td class="column8 style5 null"></td>
+          <td class="column9 style5 null"></td>
+          <td class="column10 style5 null"></td>
+          <td class="column11 style5 null"></td>
+        </tr>
+        <tr class="row11">
+          <td class="column0 style4 s style4" colspan="2">Charges(1):</td>
+          <td class="column2 style3 s style3" colspan="2">Rs.00/-</td>
+          <td class="column4 style4 s style4" colspan="2">Charges(2):</td>
+          <td class="column6 style3 s style3" colspan="2">Rs0/-</td>
+          <td class="column8 style4 s style4" colspan="2">Total:</td>
+          <td class="column10 style3 s style3" colspan="2">Rs00/-</td>
+        </tr>
+        <tr class="row12">
+          <td class="column0 style5 null"></td>
+          <td class="column1 style5 null"></td>
+          <td class="column2 style5 null"></td>
+          <td class="column3 style5 null"></td>
+          <td class="column4 style5 null"></td>
+          <td class="column5 style5 null"></td>
+          <td class="column6 style5 null"></td>
+          <td class="column7 style5 null"></td>
+          <td class="column8 style5 null"></td>
+          <td class="column9 style5 null"></td>
+          <td class="column10 style5 null"></td>
+          <td class="column11 style5 null"></td>
+        </tr>
+        <tr class="row13">
+          <td
+            class="column0 style7 s style7 style5"
+            style="padding: 30px 0px"
+            colspan="4"
+          >
+            Operator's signature
+          </td>
+          <td class="column3 style8 null style8 style5" colspan="2"></td>
+          <td
+            class="column6 style7 s style7 style5"
+            colspan="4"
+            style="padding: 30px 0px"
+          >
+            Party's Signature:
+          </td>
+          <td class="column9 style8 null style8 style5" colspan="2"></td>
+        </tr>
+      </tbody>
+    </table>
+    {% endfor %}
+    <script>
+      window.print();
+    </script>
+  </body>
 </html>

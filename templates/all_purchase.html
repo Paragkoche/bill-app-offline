@@ -1604,12 +1604,11 @@
       }
       body {
         width: 100vw;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+
         height: 100vh;
       }
     </style>
+    {% for i,info in data | enumerate %}
     <table
       border="0"
       cellpadding="0"
@@ -1716,7 +1715,7 @@
             rowspan="2"
             style="padding: 5px"
           >
-            {{invoiceNo}}
+            {{info['invoiceNo']}}
           </td>
           <td
             class="column7 style16 s style21"
@@ -1732,7 +1731,7 @@
             rowspan="2"
             style="padding: 5px"
           >
-            {{date}}
+            {{info['date']}}
           </td>
         </tr>
         <tr class="row10"></tr>
@@ -1751,7 +1750,7 @@
             rowspan="3"
             style="padding: 5px"
           >
-            {{farmerName}}
+            {{info['farmerName']}}
           </td>
           <td
             class="column7 style16 s style21"
@@ -1767,7 +1766,7 @@
             rowspan="3"
             style="padding: 5px"
           >
-            {{address}}
+            {{info['address']}}
           </td>
         </tr>
         <tr class="row12"></tr>
@@ -1817,7 +1816,7 @@
             rowspan="3"
             style="padding: 5px"
           >
-            वाहतूक वाहन क्र.: {{vehicle_no}}
+            वाहतूक वाहन क्र.: {{info['vehicle_no']}}
           </td>
           <td
             class="column6 style8 null style3"
@@ -1843,7 +1842,7 @@
             rowspan="3"
             style="padding: 5px"
           >
-            {{quantity}} {{par}}
+            {{info['quantity']}} {{info['par']}}
           </td>
           <td
             class="column5 style36 s style54"
@@ -1858,7 +1857,7 @@
             rowspan="3"
             style="padding: 5px"
           >
-            {{rate}}/-
+            {{info['rate']}}/-
           </td>
           <td
             class="column8 style35 s style52"
@@ -1874,7 +1873,7 @@
             rowspan="3"
             style="padding: 5px"
           >
-            {{total}}/- ₹
+            {{info['total']}}/- ₹
           </td>
           <!-- <td class="column14">&nbsp;</td>
           <td class="column15">&nbsp;</td>
@@ -1934,6 +1933,7 @@
         </tr>
       </tbody>
     </table>
+    {% endfor %}
     <script>
       window.print();
     </script>

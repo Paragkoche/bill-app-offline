@@ -465,15 +465,13 @@
         box-sizing: border-box;
       }
       body {
-        display: flex;
-        align-items: center;
-        justify-content: center;
         width: 100vw;
         height: 100vh;
       }
     </style>
   </head>
   <body>
+    {% for i,info in data | enumerate %}
     <table
       border="0"
       cellpadding="0"
@@ -536,7 +534,7 @@
             colspan="2"
             style="font-weight: bold"
           >
-            {{id}}
+            {{i+1}}
           </td>
           <td class="column4" style="border: none">&nbsp;</td>
           <td class="column5" style="border: none">&nbsp;</td>
@@ -555,7 +553,9 @@
             <span>VEHICLE NO</span>
             <span>:</span>
           </td>
-          <td class="column9 style4 s style4" colspan="3">{{vehicle_no}}</td>
+          <td class="column9 style4 s style4" colspan="3">
+            {{info['vehicle_no']}}
+          </td>
         </tr>
         <tr class="row5">
           <td
@@ -571,7 +571,9 @@
             <span>ADDRESS</span>
             <span>:</span>
           </td>
-          <td class="column2 style4 s style4" colspan="3">{{address}}</td>
+          <td class="column2 style4 s style4" colspan="3">
+            {{info['address']}}
+          </td>
           <td class="column4" style="border: none" style="border: none">
             &nbsp;
           </td>
@@ -590,7 +592,9 @@
             <span>SUPPLIER</span>
             <span>:</span>
           </td>
-          <td class="column9 style4 s style4" colspan="3">{{supplierName}}</td>
+          <td class="column9 style4 s style4" colspan="3">
+            {{info['supplierName']}}
+          </td>
         </tr>
         <tr class="row6">
           <td
@@ -612,13 +616,13 @@
             class="column2 style4 s style4"
             colspan="5"
           >
-            {{goods}}
+            {{info['goods']}}
           </td>
         </tr>
         <tr class="row7">
           <td class="column0 style12 s style12" colspan="2">GROSS Wt:</td>
           <td class="column2 style13 s style13" colspan="3">
-            {{before_wight}} Kg
+            {{info['before_wight']}} Kg
           </td>
           <td class="column5 style11 null"></td>
           <td
@@ -626,23 +630,27 @@
             style="padding-top: 20px"
             colspan="3"
           >
-            Date: {{date}}
+            Date: {{info['date']}}
           </td>
-          <td class="column11 style11 null" colspan="3">Time:{{in_time}}</td>
+          <td class="column11 style11 null" colspan="3">
+            Time:{{info['in_time']}}
+          </td>
         </tr>
         <tr class="row8">
           <td class="column0 style4 s style4" colspan="2">TARE Wt:</td>
           <td class="column2 style5 s style5" colspan="3">
-            {{after_wight}} kg
+            {{info['after_wight']}} kg
           </td>
           <td class="column5" style="border: none">&nbsp;</td>
-          <td class="column6 style2 s style2" colspan="3">Date: {{date}}</td>
+          <td class="column6 style2 s style2" colspan="3">
+            Date: {{info['date']}}
+          </td>
           <td
             class="column11 style11 null"
             colspan="3"
             style="border: none !important"
           >
-            Time:{{out_time}}
+            Time:{{info['out_time']}}
           </td>
           <!-- <td class="column0 style4 s style4" colspan="2">
             TARE Wt: {{after_wight}} kg
@@ -666,7 +674,7 @@
             colspan="3"
             style="padding-bottom: 10px"
           >
-            {{net_wight}} kg
+            {{info['net_wight']}} kg
           </td>
           <td class="column5" style="border: none">&nbsp;</td>
           <td
@@ -674,7 +682,7 @@
             colspan="5"
             style="padding-bottom: 10px"
           >
-            {{wight_in_word}} kg
+            {{info['wight_in_word']}} kg
           </td>
         </tr>
         <tr class="row10">
@@ -728,6 +736,7 @@
         </tr>
       </tbody>
     </table>
+    {% endfor %}
     <script>
       window.print();
     </script>

@@ -231,6 +231,8 @@ async def get_wight_print(request: Request, id: str, file_name: str):
                     "before_wight": "{:.2f}".format(i['before_wight']),
                     "after_wight": "{:.2f}".format(i['after_wight']),
                     "net_wight": "{:.2f}".format(i['after_wight'] - i['before_wight']),
+                    "in_time": i['in_time'].strftime("%I:%M %p"),
+                    "out_time": i['in_time'].strftime("%I:%M %p"),
 
                 })
     return templates.TemplateResponse(
@@ -264,7 +266,9 @@ async def get_wight_print_all(request: Request, file_name: str):
                         "vehicle_no": i['vehicle_no'],
                         "before_wight": "{:.2f}".format(i['before_wight']),
                         "after_wight": "{:.2f}".format(i['after_wight']),
-                        "net_wight": "{:.2f}".format(i['after_wight'] - i['before_wight'])
+                        "net_wight": "{:.2f}".format(i['after_wight'] - i['before_wight']),
+                        "in_time": i['in_time'].strftime("%I:%M %p"),
+                        "out_time": i['in_time'].strftime("%I:%M %p"),
                     })
             d.append(
                 {"items": s, "year": f"{j['year']}"})
@@ -472,6 +476,31 @@ async def create_pdf(filename: str, request: Request):
     return {"message": "PDFs generated successfully"}
 
 
+@app.get("/get_all_dot_matrix_print/{filename}")
+async def dot_matrix(request: Request, filename: str):
+    data = get_list(os.path.join("./database", filename))
+    # print(type(data['in_time']))
+    return templates.TemplateResponse(
+        request=request, name="all_dot_matrex.html",
+        context={
+
+
+            "data": [
+                {**i,
+                 "date": i['createdAt'].strftime(
+                     "%d/%m/%y"),
+                    "before_wight": "{}".format(int(i['before_wight'])),
+                    "after_wight": "{}".format(int(i['after_wight'])),
+                    "net_wight": "{}".format(int(i['after_wight'] - i['before_wight'])),
+                    "wight_in_word": " ".join([num2words.num2words(j, lang="en_IN",) for j in str(int(i['after_wight']) - int(i['before_wight']))]),
+                    "in_time": i['in_time'].strftime("%I:%M %p"),
+                    "out_time": i['in_time'].strftime("%I:%M %p"), } for i in data]
+            # .join([num2words.num2words(i, lang="en_IN",) for i in str("{:.2f}".format(data['after_wight'] - data['before_wight']))])
+
+        }
+    )
+
+
 @app.get("/get_dot_matrix_print/{filename}/{id}")
 async def dot_matrix(request: Request, filename: str, id: str):
     data = read_data(os.path.join("./database", filename), id)
@@ -482,14 +511,31 @@ async def dot_matrix(request: Request, filename: str, id: str):
             **data,
             "date": data['createdAt'].strftime(
                 "%d/%m/%y"),
-            "before_wight": "{}".format(data['before_wight']),
-            "after_wight": "{}".format(data['after_wight']),
-            "net_wight": "{}".format(data['after_wight'] - data['before_wight']),
-            "wight_in_word": " ".join([num2words.num2words(i, lang="en_IN",) for i in str(data['after_wight'] - data['before_wight'])]),
+            "before_wight": "{}".format(int(data['before_wight'])),
+            "after_wight": "{}".format(int(data['after_wight'])),
+            "net_wight": "{}".format(int(data['after_wight'] - data['before_wight'])),
+            "wight_in_word": " ".join([num2words.num2words(i, lang="en_IN",) for i in str(int(data['after_wight']) - int(data['before_wight']))]),
             "in_time": data['in_time'].strftime("%I:%M %p"),
             "out_time": data['in_time'].strftime("%I:%M %p"),
             # .join([num2words.num2words(i, lang="en_IN",) for i in str("{:.2f}".format(data['after_wight'] - data['before_wight']))])
 
+        }
+    )
+
+
+@app.get("/get_all_purchase_print/{filename}")
+async def dot_matrix(request: Request, filename: str):
+    data = get_list(os.path.join("./database", filename))
+    print(data)
+    return templates.TemplateResponse(
+        request=request, name="all_purchase.html",
+        context={
+            "data": [{**i,
+                     "quantity": "{:.2f}".format(float(i['quantity'])),
+                      "rate": "{:.2f}".format(float(i['rate'])),
+                      "date": i['createdAt'].strftime(
+                         "%d-%m-%y"),
+                      "total": "{:.2f}".format(float(i['quantity'] * i['rate']))} for i in data]
         }
     )
 
@@ -506,7 +552,7 @@ async def dot_matrix(request: Request, filename: str, id: str):
             "rate": "{:.2f}".format(float(data['rate'])),
             "date": data['createdAt'].strftime(
                 "%d-%m-%y"),
-            "total": "{:.2f}".format(data['quantity'] * data['rate'])
+            "total": "{:.2f}".format(float(data['quantity'] * data['rate']))
         }
     )
     # return data
