@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: "matrix-sans";
+  src: url("/static/fonts/MatrixSans-Regular.woff2") format("woff2"),
+    url("/static/fonts/MatrixSansPrint-Regular.woff2") format("woff");
+}
