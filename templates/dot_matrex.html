@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -7,7 +7,8 @@
     <style>
       @font-face {
         font-family: "matrix-sans";
-        src: url("/static/fonts/MatrixSansPrint-Regular.woff2") format("woff2"),
+        src:
+          url("/static/fonts/MatrixSansPrint-Regular.woff2") format("woff2"),
           url("/static/fonts/MatrixSansPrint-Regular.woff2") format("woff");
       }
     </style>
@@ -562,28 +563,25 @@
           <td class="column9 style4 s style4" colspan="3">{{vehicle_no}}</td>
         </tr>
         <tr class="row5">
-          <td
-            class="column0 style4 s style4"
-            colspan="2"
-            style="
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
-              width: 100px;
-            "
-          >
-            <span>ADDRESS</span>
-            <span>:</span>
+          <td class="column0 style4 s style4" colspan="1">
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 100px;
+              "
+            >
+              <span>ADDRESS</span>
+              <span>:</span>
+            </div>
           </td>
-          <td class="column2 style4 s style4" colspan="3">{{address}}</td>
-          <td class="column4" style="border: none" style="border: none">
-            &nbsp;
-          </td>
-          <td class="column5" style="border: none">&nbsp;</td>
-          <td class="column5" style="border: none">&nbsp;</td>
+          <td class="column2 style4 s style4" colspan="4">{{address}}</td>
+          <td class="column4" style="border: none">&nbsp;</td>
+          <td class="column4" style="border: none">&nbsp;</td>
           <td
             class="column6 style2 s style2"
-            colspan="3"
+            colspan="4"
             style="
               display: flex;
               align-items: center;
@@ -594,7 +592,13 @@
             <span>SUPPLIER</span>
             <span>:</span>
           </td>
-          <td class="column9 style4 s style4" colspan="3">{{supplierName}}</td>
+          <td
+            style="text-wrap-mode: nowrap"
+            class="column9 style4 s style4"
+            colspan="3"
+          >
+            {{supplierName}}
+          </td>
         </tr>
         <tr class="row6">
           <td
@@ -608,13 +612,13 @@
               padding-bottom: 10px;
             "
           >
-            <span>MARERIAL</span>
+            <span>MATERIAL</span>
             <span>:</span>
           </td>
           <td
             style="padding-bottom: 10px"
             class="column2 style4 s style4"
-            colspan="5"
+            colspan="4"
           >
             {{goods}}
           </td>
@@ -732,7 +736,7 @@
             rowspan="2"
             style="padding-top: 3px"
           >
-            Total:Rs.0/-
+            Charges (Total):Rs.0/-
           </td>
           <!-- <td class="column5 style10 null style8" colspan="7" rowspan="2"></td> -->
         </tr>

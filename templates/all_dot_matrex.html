@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -7,7 +7,8 @@
     <style>
       @font-face {
         font-family: "matrix-sans";
-        src: url("/static/fonts/MatrixSansPrint-Regular.woff2") format("woff2"),
+        src:
+          url("/static/fonts/MatrixSansPrint-Regular.woff2") format("woff2"),
           url("/static/fonts/MatrixSansPrint-Regular.woff2") format("woff");
       }
     </style>
@@ -538,7 +539,7 @@
             colspan="2"
             style="font-weight: bold"
           >
-            {{i+1}}
+            {{id}}
           </td>
           <td class="column4" style="border: none">&nbsp;</td>
           <td class="column5" style="border: none">&nbsp;</td>
@@ -557,35 +558,28 @@
             <span>VEHICLE NO</span>
             <span>:</span>
           </td>
-          <td class="column9 style4 s style4" colspan="3">
-            {{info['vehicle_no']}}
-          </td>
+          <td class="column9 style4 s style4" colspan="3">{{vehicle_no}}</td>
         </tr>
         <tr class="row5">
-          <td
-            class="column0 style4 s style4"
-            colspan="2"
-            style="
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
-              width: 100px;
-            "
-          >
-            <span>ADDRESS</span>
-            <span>:</span>
+          <td class="column0 style4 s style4" colspan="1">
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 100px;
+              "
+            >
+              <span>ADDRESS</span>
+              <span>:</span>
+            </div>
           </td>
-          <td class="column2 style4 s style4" colspan="3">
-            {{info['address']}}
-          </td>
-          <td class="column4" style="border: none" style="border: none">
-            &nbsp;
-          </td>
-          <td class="column5" style="border: none">&nbsp;</td>
-          <td class="column5" style="border: none">&nbsp;</td>
+          <td class="column2 style4 s style4" colspan="4">{{address}}</td>
+          <td class="column4" style="border: none">&nbsp;</td>
+          <td class="column4" style="border: none">&nbsp;</td>
           <td
             class="column6 style2 s style2"
-            colspan="3"
+            colspan="4"
             style="
               display: flex;
               align-items: center;
@@ -596,8 +590,12 @@
             <span>SUPPLIER</span>
             <span>:</span>
           </td>
-          <td class="column9 style4 s style4" colspan="3">
-            {{info['supplierName']}}
+          <td
+            style="text-wrap-mode: nowrap"
+            class="column9 style4 s style4"
+            colspan="3"
+          >
+            {{supplierName}}
           </td>
         </tr>
         <tr class="row6">
@@ -612,15 +610,15 @@
               padding-bottom: 10px;
             "
           >
-            <span>MARERIAL</span>
+            <span>MATERIAL</span>
             <span>:</span>
           </td>
           <td
             style="padding-bottom: 10px"
             class="column2 style4 s style4"
-            colspan="5"
+            colspan="4"
           >
-            {{info['goods']}}
+            {{goods}}
           </td>
         </tr>
         <tr class="row7">
@@ -638,7 +636,7 @@
             <span>Wt:</span>
           </td>
           <td class="column2 style13 s style13" colspan="3">
-            {{info['before_wight']}} Kg
+            {{before_wight}} Kg
           </td>
           <td class="column5 style11 null"></td>
           <td
@@ -646,15 +644,13 @@
             style="padding-top: 20px"
             colspan="3"
           >
-            Date: {{info['date']}}
+            Date: {{date}}
           </td>
-          <td class="column11 style11 null" colspan="3">
-            Time:{{info['in_time']}}
-          </td>
+          <td class="column11 style11 null" colspan="3">Time:{{in_time}}</td>
         </tr>
         <tr class="row8">
           <td
-            class="column0 style12 s style124"
+            class="column0 style4 s style4"
             colspan="2"
             style="
               display: flex;
@@ -666,18 +662,16 @@
             <span>Wt:</span>
           </td>
           <td class="column2 style5 s style5" colspan="3">
-            {{info['after_wight']}} kg
+            {{after_wight}} kg
           </td>
           <td class="column5" style="border: none">&nbsp;</td>
-          <td class="column6 style2 s style2" colspan="3">
-            Date: {{info['date']}}
-          </td>
+          <td class="column6 style2 s style2" colspan="3">Date: {{date}}</td>
           <td
             class="column11 style11 null"
             colspan="3"
             style="border: none !important"
           >
-            Time:{{info['out_time']}}
+            Time:{{out_time}}
           </td>
           <!-- <td class="column0 style4 s style4" colspan="2">
             TARE Wt: {{after_wight}} kg
@@ -690,7 +684,7 @@
         </tr>
         <tr class="row9">
           <td
-            class="column0 style12 s style12"
+            class="column0 style4 s style4"
             colspan="2"
             style="
               display: flex;
@@ -706,7 +700,7 @@
             colspan="3"
             style="padding-bottom: 10px"
           >
-            {{info['net_wight']}} kg
+            {{net_wight}} kg
           </td>
           <td class="column5" style="border: none">&nbsp;</td>
           <td
@@ -714,7 +708,7 @@
             colspan="5"
             style="padding-bottom: 10px"
           >
-            {{info['wight_in_word']}} kg
+            {{wight_in_word}} kg
           </td>
         </tr>
         <tr class="row10">
@@ -740,7 +734,7 @@
             rowspan="2"
             style="padding-top: 3px"
           >
-            Total:Rs.0/-
+            Charges (Total):Rs.0/-
           </td>
           <!-- <td class="column5 style10 null style8" colspan="7" rowspan="2"></td> -->
         </tr>

@@ -629,7 +629,9 @@ async def dot_matrix(request: Request, filename: str):
                                 j,
                                 lang="en_IN",
                             )
-                            for j in str(int(i["after_wight"]) - int(i["before_wight"]))
+                            for j in str(
+                                abs(int(i["after_wight"]) - int(i["before_wight"]))
+                            )
                         ]
                     ),
                     "in_time": data["in_time"].strftime("%H:%M"),
@@ -654,18 +656,20 @@ async def dot_matrix(request: Request, filename: str, id: str):
             "date": data["createdAt"].strftime("%d/%m/%Y"),
             "before_wight": "{}".format(int(data["before_wight"])),
             "after_wight": "{}".format(int(data["after_wight"])),
-            "net_wight": "{}".format(int(data["after_wight"] - data["before_wight"])),
+            "net_wight": "{}".format(int(data["before_wight"] - data["after_wight"])),
             "wight_in_word": " ".join(
                 [
                     num2words.num2words(
                         i,
                         lang="en_IN",
                     )
-                    for i in str(int(data["after_wight"]) - int(data["before_wight"]))
+                    for i in str(
+                        abs(int(data["after_wight"]) - int(data["before_wight"]))
+                    )
                 ]
             ),
             "in_time": data["in_time"].strftime("%H:%M"),
-            "out_time": data["in_time"].strftime("%H:%M"),
+            "out_time": data["out_time"].strftime("%H:%M"),
             # .join([num2words.num2words(i, lang="en_IN",) for i in str("{:.2f}".format(data['after_wight'] - data['before_wight']))])
         },
     )
@@ -713,10 +717,10 @@ async def dot_matrix(request: Request, filename: str, id: str):
 
 @app.on_event("startup")
 async def startup():
-    webbrowser.open("http://localhost:8000")
+    webbrowser.open("http://localhost:8080")
 
 
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(app, host="0.0.0.0")
+    uvicorn.run(app, host="0.0.0.0", port=8080)
