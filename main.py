@@ -100,7 +100,7 @@ async def bill_print(request: Request, id: str, file_name: str):
         context={
             "invoiceNo": data["invoiceNo"],
             "date": (
-                data["createdAt"].strftime("%d-%b-%y")
+                datetime.datetime.strptime(data["createdAt"], "%d-%m-%Y").strftime("%d/%m/%Y")
                 if type(data["createdAt"]) is pd.Timestamp
                 else data["createdAt"]
             ),
@@ -185,7 +185,7 @@ async def bill_print_all(request: Request, file_name: str):
                 {
                     "invoiceNo": i["invoiceNo"],
                     "date": (
-                        i["createdAt"].strftime("%d-%b-%y")
+                         datetime.datetime.strptime(i["createdAt"], "%d-%m-%Y").strftime("%d/%m/%Y")
                         if type(i["createdAt"]) is pd.Timestamp
                         else i["createdAt"]
                     ),
@@ -278,7 +278,7 @@ async def get_pass_print(request: Request, id: str, file_name: str):
             "items": [
                 {
                     "date": (
-                        data["createdAt"].strftime("%d-%b-%y")
+                         datetime.datetime.strptime(data["createdAt"], "%d-%m-%Y").strftime("%d/%m/%Y")
                         if type(data["createdAt"]) is pd.Timestamp
                         else data["createdAt"]
                     ),
@@ -305,7 +305,7 @@ async def get_pass_print_all(request: Request, file_name: str):
                     "items": [
                         {
                             "date": (
-                                i["createdAt"].strftime("%d-%b-%y")
+                                 datetime.datetime.strptime(i["createdAt"], "%d-%m-%Y").strftime("%d/%m/%Y")
                                 if type(i["createdAt"]) is pd.Timestamp
                                 else i["createdAt"]
                             ),
@@ -332,7 +332,7 @@ async def get_wight_print(request: Request, id: str, file_name: str):
             s.append(
                 {
                     "date": (
-                        data["createdAt"].strftime("%d-%b-%y")
+                         datetime.datetime.strptime(data["createdAt"], "%d-%m-%Y").strftime("%d/%m/%Y")
                         if type(data["createdAt"]) is pd.Timestamp
                         else data["createdAt"]
                     ),
@@ -367,7 +367,7 @@ async def get_wight_print_all(request: Request, file_name: str):
                 s.append(
                     {
                         "date": (
-                            j["createdAt"].strftime("%d-%b-%y")
+                             datetime.datetime.strptime(j["createdAt"], "%d-%m-%Y").strftime("%d/%m/%Y")
                             if type(j["createdAt"]) is pd.Timestamp
                             else j["createdAt"]
                         ),
@@ -611,6 +611,7 @@ async def create_pdf(filename: str, request: Request):
 @app.get("/get_all_dot_matrix_print/{filename}")
 async def dot_matrix(request: Request, filename: str):
     data = get_list(os.path.join("./database", filename))
+    # print(datetime.datetime.strptime(data[0]['createdAt'], '%Y-%m-%dT%H:%M:%S.%fZ'))
     # print(type(data['in_time']))
     return templates.TemplateResponse(
         request=request,
@@ -619,10 +620,10 @@ async def dot_matrix(request: Request, filename: str):
             "data": [
                 {
                     **i,
-                    "date": i["createdAt"].strftime("%d/%m/%Y"),
-                    "before_wight": "{}".format(int(i["before_wight"])),
-                    "after_wight": "{}".format(int(i["after_wight"])),
-                    "net_wight": "{}".format(int(i["after_wight"] - i["before_wight"])),
+                    "date":  datetime.datetime.strptime(i["createdAt"], "%d-%m-%Y").strftime("%d/%m/%Y"),
+                    "before_wight": "{}".format(int(i["after_wight"])),
+                    "after_wight": "{}".format(int(i["before_wight"])),
+                    "net_wight": "{}".format(int(i["before_wight"] - i["after_wight"])),
                     "wight_in_word": " ".join(
                         [
                             num2words.num2words(
@@ -630,12 +631,12 @@ async def dot_matrix(request: Request, filename: str):
                                 lang="en_IN",
                             )
                             for j in str(
-                                abs(int(i["after_wight"]) - int(i["before_wight"]))
+                                abs(int(i["before_wight"]) - int(i["after_wight"]))
                             )
                         ]
                     ),
-                    "in_time": data["in_time"].strftime("%H:%M"),
-                    "out_time": data["in_time"].strftime("%H:%M"),
+                    "in_time": i["in_time"].strftime("%H:%M"),
+                    "out_time": i["out_time"].strftime("%H:%M"),
                 }
                 for i in data
             ]
@@ -653,9 +654,9 @@ async def dot_matrix(request: Request, filename: str, id: str):
         name="dot_matrex.html",
         context={
             **data,
-            "date": data["createdAt"].strftime("%d/%m/%Y"),
-            "before_wight": "{}".format(int(data["before_wight"])),
-            "after_wight": "{}".format(int(data["after_wight"])),
+            "date": datetime.datetime.strptime(data["createdAt"], "%d-%m-%Y").strftime("%d/%m/%Y"),
+            "before_wight": "{}".format(int(data["after_wight"])),
+            "after_wight": "{}".format(int(data["before_wight"])),
             "net_wight": "{}".format(int(data["before_wight"] - data["after_wight"])),
             "wight_in_word": " ".join(
                 [
@@ -664,7 +665,7 @@ async def dot_matrix(request: Request, filename: str, id: str):
                         lang="en_IN",
                     )
                     for i in str(
-                        abs(int(data["after_wight"]) - int(data["before_wight"]))
+                        abs(int(data["before_wight"]) - int(data["after_wight"]))
                     )
                 ]
             ),
@@ -688,7 +689,7 @@ async def dot_matrix(request: Request, filename: str):
                     **i,
                     "quantity": "{:.2f}".format(float(i["quantity"])),
                     "rate": "{:.2f}".format(float(i["rate"])),
-                    "date": i["createdAt"].strftime("%d-%m-%y"),
+                    "date":  datetime.datetime.strptime(i["createdAt"], "%d-%m-%Y").strftime("%d/%m/%Y"),
                     "total": "{:.2f}".format(float(i["quantity"] * i["rate"])),
                 }
                 for i in data
@@ -700,7 +701,7 @@ async def dot_matrix(request: Request, filename: str):
 @app.get("/get_purchase_print/{filename}/{id}")
 async def dot_matrix(request: Request, filename: str, id: str):
     data = read_data(os.path.join("./database", filename), id)
-    print(data)
+    # print(data)
     return templates.TemplateResponse(
         request=request,
         name="purchase.html",
@@ -708,7 +709,7 @@ async def dot_matrix(request: Request, filename: str, id: str):
             **data,
             "quantity": "{:.2f}".format(float(data["quantity"])),
             "rate": "{:.2f}".format(float(data["rate"])),
-            "date": data["createdAt"].strftime("%d-%m-%y"),
+            "date":  datetime.datetime.strptime(data["createdAt"], "%d-%m-%Y").strftime("%d/%m/%Y"),
             "total": "{:.2f}".format(float(data["quantity"] * data["rate"])),
         },
     )
