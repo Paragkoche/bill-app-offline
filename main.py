@@ -54,12 +54,11 @@ async def read_item(request: Request):
         for file in f:
             for bill in get_list(file):
                 # print(bill)
-                print(type(bill["createdAt"]) is pd.Timestamp)
-                chart_data["labels"].append(
-                    bill["createdAt"].strftime("%d-%b-%y")
-                    if type(bill["createdAt"]) is pd.Timestamp
-                    else bill["createdAt"]
-                )
+                
+                if isinstance(bill["createdAt"], (pd.Timestamp, datetime.datetime)):
+                    chart_data["labels"].append(bill["createdAt"].strftime("%d-%b-%y"))
+                else:
+                    chart_data["labels"].append(str(bill["createdAt"]))
                 chart_data["total_values"].append(
                     float(bill["quantity"]) * float(bill["rate"])
                 )
