@@ -623,7 +623,7 @@ async def dot_matrix(request: Request, filename: str):
                     "date":  datetime.datetime.strptime(i["createdAt"], "%d-%m-%Y").strftime("%d/%m/%Y"),
                     "before_wight": "{}".format(int(i["after_wight"])),
                     "after_wight": "{}".format(int(i["before_wight"])),
-                    "net_wight": "{}".format(int(i["before_wight"] - i["after_wight"])),
+                    "net_wight": "{}".format(abs(int(i["before_wight"] - i["after_wight"]))),
                     "wight_in_word": " ".join(
                         [
                             num2words.num2words(
@@ -657,7 +657,7 @@ async def dot_matrix(request: Request, filename: str, id: str):
             "date": datetime.datetime.strptime(data["createdAt"], "%d-%m-%Y").strftime("%d/%m/%Y"),
             "before_wight": "{}".format(int(data["after_wight"])),
             "after_wight": "{}".format(int(data["before_wight"])),
-            "net_wight": "{}".format(int(data["before_wight"] - data["after_wight"])),
+            "net_wight": "{}".format(abs(int(data["before_wight"] - data["after_wight"]))),
             "wight_in_word": " ".join(
                 [
                     num2words.num2words(
