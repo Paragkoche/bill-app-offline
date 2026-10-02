@@ -35,6 +35,7 @@ DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 OutputBaseFilename=mysetup
+OutputDir=installer
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
@@ -72,10 +73,10 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "J:\ppl\bill-app-offline\dist\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "J:\ppl\bill-app-offline\templates\*"; DestDir: "{app}\templates"; Flags: ignoreversion recursesubdirs
-Source: "J:\ppl\bill-app-offline\static\*"; DestDir: "{app}\static"; Flags: ignoreversion recursesubdirs
-Source: "J:\ppl\bill-app-offline\database\*"; DestDir: "{app}\database"; Flags: ignoreversion recursesubdirs
+Source: "dist\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "templates\*"; DestDir: "{app}\templates"; Flags: ignoreversion recursesubdirs
+Source: "static\*"; DestDir: "{app}\static"; Flags: ignoreversion recursesubdirs
+Source: "database\*"; DestDir: "{app}\database"; Flags: ignoreversion recursesubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]

@@ -284,6 +284,7 @@ async def get_pass_print(request: Request, id: str, file_name: str):
                     "good": data["goods"],
                     "villagerName": data["farmerName"],
                     "vehicle_no": data["vehicle_no"],
+                    "address": data.get("address") or data.get("supplierOtherInfo") or "",
                 }
             ],
         },
@@ -311,6 +312,7 @@ async def get_pass_print_all(request: Request, file_name: str):
                             "good": i["goods"],
                             "villagerName": i["farmerName"],
                             "vehicle_no": i["vehicle_no"],
+                            "address": i.get("address") or i.get("supplierOtherInfo") or "",
                         }
                     ]
                 }
@@ -343,8 +345,9 @@ async def get_wight_print(request: Request, id: str, file_name: str):
                     "before_wight": "{:.2f}".format(i["before_wight"]),
                     "after_wight": "{:.2f}".format(i["after_wight"]),
                     "net_wight": "{:.2f}".format(i["after_wight"] - i["before_wight"]),
-                    "in_time": i["in_time"].strftime("%I:%M %p"),
-                    "out_time": i["in_time"].strftime("%I:%M %p"),
+                    "in_time": i["in_time"].strftime("%I:%M %p") if hasattr(i["in_time"], "strftime") else str(i.get("in_time") or ""),
+                    "out_time": i["in_time"].strftime("%I:%M %p") if hasattr(i["in_time"], "strftime") else str(i.get("in_time") or ""),
+                    "address": i.get("address") or i.get("supplierOtherInfo") or "",
                 }
             )
     return templates.TemplateResponse(
@@ -380,8 +383,9 @@ async def get_wight_print_all(request: Request, file_name: str):
                         "net_wight": "{:.2f}".format(
                             i["after_wight"] - i["before_wight"]
                         ),
-                        "in_time": i["in_time"].strftime("%I:%M %p"),
-                        "out_time": i["in_time"].strftime("%I:%M %p"),
+                        "in_time": i["in_time"].strftime("%I:%M %p") if hasattr(i["in_time"], "strftime") else str(i.get("in_time") or ""),
+                        "out_time": i["in_time"].strftime("%I:%M %p") if hasattr(i["in_time"], "strftime") else str(i.get("in_time") or ""),
+                        "address": i.get("address") or i.get("supplierOtherInfo") or "",
                     }
                 )
             d.append({"items": s, "year": f"{j['year']}"})
@@ -721,6 +725,11 @@ async def startup():
 
 
 if __name__ == "__main__":
+    import multiprocessing
+    import sys
+    multiprocessing.freeze_support()
+    if getattr(sys, "frozen", False):
+        os.chdir(os.path.dirname(sys.executable))
     import uvicorn
 
     uvicorn.run(app, host="0.0.0.0", port=8080)

@@ -26,10 +26,10 @@ class Bill(BaseModel):
     farmerCode: str
     before_wight: str
     after_wight: str
-    year: str
-    in_time: str | None
-    out_time: str | None
-    address: str | None
+    year: str = "2026-2027"
+    in_time: str | None = None
+    out_time: str | None = None
+    address: str | None = None
 
 # Function to check if the Excel file exists and create it if it does not
 

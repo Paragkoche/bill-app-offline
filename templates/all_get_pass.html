@@ -62,7 +62,7 @@
               padding: 20px;
             "
           >
-            सौसर कॉटन प्रोसेसिंग प्राइवेट लिमिटेड सौसर-{{year}}
+            सौसर कॉटन प्रोसेसिंग प्राइवेट लिमिटेड सौसर {{ '2026-2027' if year == '2025-2026' else (year or '2026-2027') }}
           </td>
         </tr>
         <tr style="border: 1px solid black">
@@ -156,7 +156,6 @@
             style="
               border-top: 1px solid black;
               border-left: 1px solid black;
-              /* border-right: 1px solid black; */
               border-bottom: 1px solid black;
               text-align: left;
             "
@@ -165,17 +164,38 @@
             माल वाहक का नाम:-
           </td>
           <td
-            colspan="10"
+            colspan="4"
             rowspan="2"
             style="
               border-top: 1px solid black;
-              /* border-left: 1px solid black; */
-              border-right: 1px solid black;
               border-bottom: 1px solid black;
               font-weight: bold;
             "
           >
             {{item["villagerName"]}}
+          </td>
+          <td
+            colspan="2"
+            rowspan="2"
+            style="
+              border-top: 1px solid black;
+              border-bottom: 1px solid black;
+              text-align: right;
+            "
+          >
+            गाँव का नाम:-&nbsp;&nbsp;&nbsp;&nbsp;
+          </td>
+          <td
+            colspan="4"
+            rowspan="2"
+            style="
+              border-top: 1px solid black;
+              border-right: 1px solid black;
+              border-bottom: 1px solid black;
+              font-weight: bold;
+            "
+          >
+            {{item["address"] or ""}}
           </td>
         </tr>
         <tr></tr>
